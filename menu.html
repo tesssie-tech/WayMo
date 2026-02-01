@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Menu - WayMo</title>
+    <link rel="stylesheet" href="Waymo.css">
+</head>
+<body>
+    <div class="container">
+        <div class="logo" style="font-size: 1.6em; font-weight: bold; color: #4CAF50;">
+            <span style="color: #FF5722;">Way</span><span>Mo</span>
+        </div>
+        <header>
+            <h1>Menu</h1>
+        </header>
+
+       
+
+        <section class="search-section">
+            <div style="display:flex; gap:12px; align-items:center;">
+                <input id="menu-search" placeholder="Search dishes (e.g., Burger, Pasta)">
+                <button id="search-menu-btn">Search</button>
+                <button onclick="location.href='index.html'">Back</button>
+            </div>
+        </section>
+
+        <div class="restaurants">
+            <h1>Popular Dishes</h1>
+             <nav class="category-nav" aria-label="Menu categories">
+          <div class="category-track">
+            <button class="cat-item active">All Specials</button>
+            <button class="cat-item">Top of the Week</button>
+            <button class="cat-item">Seafoods</button>
+            <button class="cat-item">Burgers</button>
+            <button class="cat-item">Chickens</button>
+            <button class="cat-item">Jollof Rice</button>
+            <button class="cat-item">Desserts</button>
+            <button class="cat-item">Drinks</button>
+          </div>
+        </nav>
+            <div id="menu-list"></div>
+        </div>
+          
+
+          <nav class="bottom-nav" role="navigation" aria-label="Bottom navigation">
+            <button class="nav-item active" data-view="home" aria-label="Home">
+                <span class="icon">🏠</span>
+                <span class="label">Home</span>
+            </button>
+            <button class="nav-item" data-view="menu" aria-label="Menu" onclick="location.href='menu.html'">
+                <span class="icon">📖</span>
+                <span class="label">Menu</span>
+            </button>
+            <button class="nav-item" data-view="cart" aria-label="Cart">
+                <span class="icon">🛒</span>
+                <span class="label">Cart</span>
+            </button>
+            <button class="nav-item" data-view="profile" aria-label="Profile">
+                <span class="icon">👤</span>
+                <span class="label">Profile</span>
+            </button>
+        </nav>
+    </div>
+
+ <script src="Waymo.js"></script>
+</body>
+</html>
