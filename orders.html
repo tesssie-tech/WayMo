@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History - Waymo</title>
+    <link rel="stylesheet" href="Waymo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="logo" style="font-size: 1.6em; font-weight: bold;">
+            <i class="fas fa-burger" style="margin-right: 8px; color: var(--c1);"></i><span style="color: var(--c1);">Way</span><span style="color: var(--c2);">Mo</span>
+        </div>
+        <header>
+            <h1>Order History</h1>
+        </header>
+
+        <main id="orders-view">
+            <div id="full-order-history" style="margin-top: 20px; padding: 20px;">
+                <!-- Injected by JS -->
+            </div>
+        </main>
+
+        <nav class="bottom-nav" role="navigation" aria-label="Bottom navigation">
+            <button class="nav-item" data-view="home" aria-label="Home" onclick="location.href='index.html'">
+                <i class="fas fa-home icon"></i>
+                <span class="label">Home</span>
+            </button>
+            <button class="nav-item" data-view="menu" aria-label="Menu" onclick="location.href='menu.html'">
+                <i class="fas fa-utensils icon"></i>
+                <span class="label">Menu</span>
+            </button>
+            <button class="nav-item" data-view="cart" aria-label="Cart" onclick="location.href='cart.html'">
+                <i class="fas fa-shopping-cart icon"></i>
+                <span class="cart-badge" style="display: none;">0</span>
+                <span class="label">Cart</span>
+            </button>
+            <button class="nav-item active" data-view="profile" aria-label="Profile" onclick="location.href='profile.html'">
+                <i class="fas fa-user icon"></i>
+                <span class="label">Profile</span>
+            </button>
+            <button class="nav-item" data-view="contact" aria-label="Contact" onclick="location.href='contact.html'">
+                <i class="fas fa-headset icon"></i>
+                <span class="label">Contact</span>
+            </button>
+        </nav>
+    </div>
+    <script src="waymo.js"></script>
+</body>
+</html>

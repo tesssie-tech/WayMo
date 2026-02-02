@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to WayMo</title>
+    <link rel="stylesheet" href="Waymo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Simple Header -->
+        <header style="padding: 20px 0; display: flex; justify-content: space-between; align-items: center; animation: fadeInDown 0.8s ease-out forwards;">
+            <div class="logo" style="font-size: 1.8em; font-weight: bold;">
+                <i class="fas fa-burger" style="margin-right: 8px; color: var(--c1);"></i>
+                <span style="color: var(--c1);">Way</span><span style="color: var(--c2);">Mo</span>
+            </div>
+            <div class="header-buttons">
+                <a href="#" class="btn-login" id="login-btn">Login</a>
+                <a href="#" class="btn-signup" id="signup-btn">Sign Up</a>
+            </div>
+        </header>
+
+        <div class="landing-wrapper">
+            <div class="landing-hero" style="animation: zoomIn 0.8s ease-out;">
+                <h1>Taste the Future.</h1>
+                <p>Experience the next generation of food delivery. Curated meals, real-time tracking, and flavors tailored specifically to your palate.</p>
+                
+                <a href="#" class="cta-button-large" id="get-started-btn">
+                    Get Started <i class="fas fa-arrow-right" style="margin-left: 10px;"></i>
+                </a>
+            </div>
+
+            <div class="hero-image-container" style="animation: fadeInUpSection 1s ease-out 0.3s backwards;">
+                <!-- Using a high-quality food image from Unsplash -->
+                <div id="hero-parallax-wrapper" style="width: 100%; will-change: transform;">
+                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200&auto=format&fit=crop" alt="Delicious Food" class="hero-img">
+                </div>
+            </div>
+
+            <div class="features-grid" style="animation: fadeInUpSection 1s ease-out 0.6s backwards;">
+                <div class="feature-card">
+                    <i class="fas fa-robot"></i>
+                    <h3>AI Recommendations</h3>
+                    <p>Our smart algorithm learns what you love and suggests dishes you'll crave before you even know it.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Lightning Fast</h3>
+                    <p>Real-time order tracking from the kitchen to your doorstep with live status updates.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-heart"></i>
+                    <h3>Curated for You</h3>
+                    <p>Discover top-rated local gems and exclusive specials tailored to your taste profile.</p>
+                </div>
+            </div>
+
+            <footer style="margin-top: 50px; opacity: 0.6; font-size: 0.9em;">
+                <div class="footer-content">
+                    <form class="newsletter-form" id="newsletter-form">
+                        <input type="email" placeholder="Email address..." required>
+                        <button type="submit">Join</button>
+                    </form>
+                    <div id="newsletter-success" style="display: none; margin-bottom: 20px; align-items: center; justify-content: center;">
+                        <i class="fas fa-check-circle" style="color: var(--c2); font-size: 1.5em; margin-right: 10px;"></i>
+                        <span style="color: var(--c1); font-size: 1.2em; font-weight: bold;">You're on the list!</span>
+                    </div>
+                    <div class="social-media">
+                        <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                    <p>&copy; 2026 WayMo Food Delivery. All rights reserved.</p>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <span class="close-modal" id="close-login">&times;</span>
+            <div class="modal-header" style="text-align: center; margin-bottom: 20px;">
+                <h2 style="font-family: 'Pacifico', cursive; color: var(--c1);">Welcome Back</h2>
+                <p style="color: #ccc;">Login to continue</p>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" placeholder="Enter your email" required style="width: 100%;">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="login-password" placeholder="Enter your password" required style="width: 100%;">
+                        <i class="fas fa-eye toggle-password" data-target="login-password"></i>
+                    </div>
+                </div>
+                <button type="submit" style="width: 100%; margin-top: 10px;">Login</button>
+            </form>
+            <div style="text-align: center; margin-top: 15px; font-size: 0.9em;">
+                <a href="#" id="forgot-password-link" style="color: var(--c3); text-decoration: none;">Forgot Password?</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign Up Modal -->
+    <div id="signup-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <span class="close-modal" id="close-signup">&times;</span>
+            <div class="modal-header" style="text-align: center; margin-bottom: 20px;">
+                <h2 style="font-family: 'Pacifico', cursive; color: var(--c1);">Join WayMo</h2>
+                <p style="color: #ccc;">Create your account</p>
+            </div>
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="signup-name">Full Name</label>
+                    <input type="text" id="signup-name" placeholder="Enter your name" required style="width: 100%;">
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" placeholder="Subscribe to our newsletter...." required style="width: 100%;">
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="signup-password" placeholder="Create a password" required style="width: 100%;">
+                        <i class="fas fa-eye toggle-password" data-target="signup-password"></i>
+                    </div>
+                </div>
+                <button type="submit" style="width: 100%; margin-top: 10px;">Sign Up</button>
+            </form>
+            <div style="text-align: center; margin-top: 15px; font-size: 0.9em;">
+                <span style="color: #ccc;">Already have an account?</span> <a href="#" id="switch-to-login" style="color: var(--c3); text-decoration: none;">Login</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Get Started Modal -->
+    <div id="get-started-modal" class="modal">
+        <div class="modal-content split-layout">
+            <div class="modal-slider-container">
+                <div class="modal-slider">
+                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800&auto=format&fit=crop" alt="Delicious Pizza">
+                    <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?q=80&w=800&auto=format&fit=crop" alt="Fresh Sandwich">
+                </div>
+                <div class="slider-dots">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+            <div class="modal-right-side">
+                <span class="close-modal" id="close-get-started" style="top: 15px; right: 20px;">&times;</span>
+                <div class="modal-header" style="margin-bottom: 20px;">
+                    <h2 style="font-family: 'Pacifico', cursive; color: var(--c1);">Let's Eat!</h2>
+                    <p style="color: #ccc;">How would you like to proceed?</p>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <button id="gs-signup-btn" style="width: 100%; padding: 12px; border-radius: 30px; background: var(--c2); color: white; border: none; font-weight: bold; cursor: pointer;">Create Account</button>
+                    <button id="gs-guest-btn" style="width: 100%; padding: 12px; border-radius: 30px; background: transparent; color: var(--c1); border: 2px solid var(--c1); font-weight: bold; cursor: pointer;">Continue as Guest</button>
+                </div>
+                <div style="margin-top: 15px; font-size: 0.9em;">
+                    <span style="color: #ccc;">Already have an account?</span> <a href="#" id="gs-login-link" style="color: var(--c3); text-decoration: none;">Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgot-password-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <span class="close-modal" id="close-forgot-password">&times;</span>
+            <div class="modal-header" style="text-align: center; margin-bottom: 20px;">
+                <h2 style="font-family: 'Pacifico', cursive; color: var(--c1);">Reset Password</h2>
+                <p style="color: #ccc;">Enter your email to receive a reset link</p>
+            </div>
+            <form id="forgot-password-form">
+                <div class="form-group">
+                    <label for="reset-email">Email</label>
+                    <input type="email" id="reset-email" placeholder="Enter your email" required style="width: 100%;">
+                </div>
+                <button type="submit" style="width: 100%; margin-top: 10px;">Send Reset Link</button>
+            </form>
+            <div style="text-align: center; margin-top: 15px; font-size: 0.9em;">
+                <a href="#" id="back-to-login" style="color: var(--c3); text-decoration: none;">Back to Login</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Verification Modal -->
+    <div id="verification-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <span class="close-modal" id="close-verification">&times;</span>
+            <div class="modal-header" style="margin-bottom: 20px;">
+                <h2 style="font-family: 'Pacifico', cursive; color: var(--c1);">Verify Account</h2>
+                <p style="color: #ccc;">Please enter the 4-digit code sent to your email.</p>
+            </div>
+            <form id="verification-form">
+                <div class="form-group" style="display: flex; justify-content: center; gap: 10px;">
+                    <input type="text" maxlength="1" class="verify-input" required>
+                    <input type="text" maxlength="1" class="verify-input" required>
+                    <input type="text" maxlength="1" class="verify-input" required>
+                    <input type="text" maxlength="1" class="verify-input" required>
+                </div>
+                <button type="submit" style="width: 100%; margin-top: 20px;">Verify</button>
+            </form>
+            <div style="margin-top: 15px; font-size: 0.9em;">
+                <a href="#" id="resend-code-link" style="color: var(--c3); text-decoration: none;">Resend Code</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Welcome Modal -->
+    <div id="welcome-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <div class="modal-header" style="margin-bottom: 20px;">
+                <div style="font-size: 4em; color: var(--c2); margin-bottom: 15px; animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h2 style="font-family: 'Pacifico', cursive; color: var(--c1);">Welcome Aboard!</h2>
+                <p style="color: #ccc;">You're all set.</p>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--c1); margin-bottom: 25px; line-height: 1.5;">Your account has been successfully created and verified. Get ready to taste the future.</p>
+            </div>
+            <button id="start-exploring-btn" style="width: 100%; padding: 12px; border-radius: 30px; background: var(--c2); color: white; border: none; font-weight: bold; cursor: pointer; transition: transform 0.2s;">Start Exploring</button>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <h3 style="color: var(--c1); font-family: 'Pacifico', cursive;">Preparing your experience...</h3>
+    </div>
+
+    <script>
+        // Simple script to handle entrance animations if needed, 
+        // though CSS animations handle most of it.
+        console.log("Welcome to WayMo Landing Page");
+
+        const form = document.getElementById('newsletter-form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                form.style.display = 'none';
+                const success = document.getElementById('newsletter-success');
+                success.style.display = 'flex';
+                success.style.animation = 'popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            });
+        }
+
+        // Login Modal Logic
+        const loginBtn = document.getElementById('login-btn');
+        const loginModal = document.getElementById('login-modal');
+        const closeLogin = document.getElementById('close-login');
+        const loginForm = document.getElementById('login-form');
+        const forgotPasswordLink = document.getElementById('forgot-password-link');
+
+        if (loginBtn && loginModal) {
+            loginBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                loginModal.style.display = 'flex';
+            });
+        }
+
+        if (closeLogin && loginModal) {
+            closeLogin.addEventListener('click', () => {
+                loginModal.style.display = 'none';
+            });
+        }
+
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+            if (document.getElementById('signup-modal') && e.target === document.getElementById('signup-modal')) {
+                document.getElementById('signup-modal').style.display = 'none';
+            }
+            if (document.getElementById('get-started-modal') && e.target === document.getElementById('get-started-modal')) {
+                document.getElementById('get-started-modal').style.display = 'none';
+            }
+            if (document.getElementById('forgot-password-modal') && e.target === document.getElementById('forgot-password-modal')) {
+                document.getElementById('forgot-password-modal').style.display = 'none';
+            }
+            if (document.getElementById('verification-modal') && e.target === document.getElementById('verification-modal')) {
+                document.getElementById('verification-modal').style.display = 'none';
+            }
+            if (document.getElementById('welcome-modal') && e.target === document.getElementById('welcome-modal')) {
+                // Optional: Prevent closing welcome modal by clicking outside to force button click, or allow it.
+            }
+        });
+
+        if (loginForm) {
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                // Save User Data
+                const email = document.getElementById('login-email').value;
+                const name = email.split('@')[0]; // Use part of email as name if unknown
+                localStorage.setItem('waymo_user', JSON.stringify({ name: name, email: email }));
+
+                const btn = loginForm.querySelector('button');
+                const originalText = btn.textContent;
+                btn.textContent = 'Logging in...';
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            });
+        }
+
+        // Forgot Password Modal Logic
+        const forgotPasswordModal = document.getElementById('forgot-password-modal');
+        const closeForgotPassword = document.getElementById('close-forgot-password');
+        const forgotPasswordForm = document.getElementById('forgot-password-form');
+        const backToLogin = document.getElementById('back-to-login');
+
+        if (forgotPasswordLink && forgotPasswordModal) {
+            forgotPasswordLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                loginModal.style.display = 'none';
+                forgotPasswordModal.style.display = 'flex';
+            });
+        }
+
+        if (closeForgotPassword && forgotPasswordModal) {
+            closeForgotPassword.addEventListener('click', () => {
+                forgotPasswordModal.style.display = 'none';
+            });
+        }
+
+        if (backToLogin) {
+            backToLogin.addEventListener('click', (e) => {
+                e.preventDefault();
+                forgotPasswordModal.style.display = 'none';
+                if (loginModal) loginModal.style.display = 'flex';
+            });
+        }
+
+        if (forgotPasswordForm) {
+            forgotPasswordForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const btn = forgotPasswordForm.querySelector('button');
+                btn.textContent = 'Sending...';
+                setTimeout(() => {
+                    forgotPasswordModal.style.display = 'none';
+                    const verifyModal = document.getElementById('verification-modal');
+                    if (verifyModal) {
+                        verifyModal.style.display = 'flex';
+                        startResendTimer();
+                    }
+                    btn.textContent = 'Send Reset Link';
+                }, 1500);
+            });
+        }
+
+        // Sign Up Modal Logic
+        const signupBtn = document.getElementById('signup-btn');
+        const signupModal = document.getElementById('signup-modal');
+        const closeSignup = document.getElementById('close-signup');
+        const signupForm = document.getElementById('signup-form');
+        const switchToLogin = document.getElementById('switch-to-login');
+
+        if (signupBtn && signupModal) {
+            signupBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                signupModal.style.display = 'flex';
+            });
+        }
+
+        if (closeSignup && signupModal) {
+            closeSignup.addEventListener('click', () => {
+                signupModal.style.display = 'none';
+            });
+        }
+
+        if (switchToLogin) {
+            switchToLogin.addEventListener('click', (e) => {
+                e.preventDefault();
+                signupModal.style.display = 'none';
+                if (loginModal) loginModal.style.display = 'flex';
+            });
+        }
+
+        if (signupForm) {
+            signupForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                // Save User Data
+                const name = document.getElementById('signup-name').value;
+                const email = document.getElementById('signup-email').value;
+                localStorage.setItem('waymo_user', JSON.stringify({ name: name, email: email }));
+
+                const btn = signupForm.querySelector('button');
+                const originalText = btn.textContent;
+                btn.textContent = 'Creating Account...';
+                setTimeout(() => {
+                    signupModal.style.display = 'none';
+                    document.getElementById('verification-modal').style.display = 'flex';
+                    startResendTimer();
+                    btn.textContent = originalText;
+                }, 1500);
+            });
+        }
+
+        // Get Started Modal Logic
+        const getStartedBtn = document.getElementById('get-started-btn');
+        const getStartedModal = document.getElementById('get-started-modal');
+        const closeGetStarted = document.getElementById('close-get-started');
+        const gsSignupBtn = document.getElementById('gs-signup-btn');
+        const gsGuestBtn = document.getElementById('gs-guest-btn');
+        const gsLoginLink = document.getElementById('gs-login-link');
+
+        if (getStartedBtn && getStartedModal) {
+            getStartedBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                getStartedModal.style.display = 'flex';
+            });
+        }
+
+        if (closeGetStarted && getStartedModal) {
+            closeGetStarted.addEventListener('click', () => {
+                getStartedModal.style.display = 'none';
+            });
+        }
+
+        if (gsSignupBtn) {
+            gsSignupBtn.addEventListener('click', () => {
+                getStartedModal.style.display = 'none';
+                if (signupModal) signupModal.style.display = 'flex';
+            });
+        }
+
+        if (gsGuestBtn) {
+            gsGuestBtn.addEventListener('click', () => {
+                // Save Guest Data
+                localStorage.setItem('waymo_user', JSON.stringify({ name: 'Guest', email: '' }));
+
+                getStartedModal.style.display = 'none';
+                const loader = document.getElementById('loading-overlay');
+                if (loader) {
+                    loader.style.display = 'flex';
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                } else {
+                    window.location.href = 'index.html';
+                }
+            });
+        }
+
+        if (gsLoginLink) {
+            gsLoginLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                getStartedModal.style.display = 'none';
+                if (loginModal) loginModal.style.display = 'flex';
+            });
+        }
+
+        // Image Slider Logic with Swipe Support
+        const slider = document.querySelector('.modal-slider');
+        const dots = document.querySelectorAll('.dot');
+        let currentSlide = 0;
+        let slideInterval;
+
+        function updateSlider(index) {
+            if (!slider) return;
+            // 2 images, width 200%. Index 0 = 0%, Index 1 = -50%
+            slider.style.transform = `translateX(-${index * 50}%)`;
+            
+            dots.forEach(d => d.classList.remove('active'));
+            if (dots[index]) dots[index].classList.add('active');
+            
+            currentSlide = index;
+        }
+
+        function nextSlide() {
+            let next = currentSlide + 1;
+            if (next > 1) next = 0;
+            updateSlider(next);
+        }
+
+        function startSlideShow() {
+            stopSlideShow();
+            slideInterval = setInterval(nextSlide, 4000);
+        }
+
+        function stopSlideShow() {
+            if (slideInterval) clearInterval(slideInterval);
+        }
+
+        if (slider && dots.length > 0) {
+            // Initialize
+            dots[0].classList.add('active');
+            startSlideShow();
+
+            // Swipe Logic
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            slider.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+                stopSlideShow();
+            }, {passive: true});
+
+            slider.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                if (touchEndX < touchStartX - 50) {
+                    nextSlide(); // Swipe Left
+                } else if (touchEndX > touchStartX + 50) {
+                    updateSlider(currentSlide === 0 ? 1 : 0); // Swipe Right
+                }
+                startSlideShow();
+            }, {passive: true});
+        }
+
+        // Verification Modal Logic
+        const verificationModal = document.getElementById('verification-modal');
+        const closeVerification = document.getElementById('close-verification');
+        const verificationForm = document.getElementById('verification-form');
+        const verifyInputs = document.querySelectorAll('.verify-input');
+        const resendLink = document.getElementById('resend-code-link');
+        let resendInterval;
+
+        function startResendTimer() {
+            let timeLeft = 60;
+            if (resendLink) {
+                resendLink.style.pointerEvents = 'none';
+                resendLink.style.opacity = '0.5';
+                resendLink.textContent = `Resend Code (${timeLeft}s)`;
+                
+                if (resendInterval) clearInterval(resendInterval);
+                
+                resendInterval = setInterval(() => {
+                    timeLeft--;
+                    if (timeLeft > 0) {
+                        resendLink.textContent = `Resend Code (${timeLeft}s)`;
+                    } else {
+                        clearInterval(resendInterval);
+                        resendLink.textContent = 'Resend Code';
+                        resendLink.style.pointerEvents = 'auto';
+                        resendLink.style.opacity = '1';
+                    }
+                }, 1000);
+            }
+        }
+
+        if (closeVerification && verificationModal) {
+            closeVerification.addEventListener('click', () => {
+                verificationModal.style.display = 'none';
+                if (resendInterval) clearInterval(resendInterval);
+            });
+        }
+
+        // Auto-focus next input
+        verifyInputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1 && index < verifyInputs.length - 1) {
+                    verifyInputs[index + 1].focus();
+                }
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+                    verifyInputs[index - 1].focus();
+                }
+            });
+        });
+
+        if (verificationForm) {
+            verificationForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Gather code
+                let code = '';
+                verifyInputs.forEach(input => code += input.value);
+
+                const btn = verificationForm.querySelector('button');
+                const originalText = btn.textContent;
+                btn.textContent = 'Verifying...';
+                
+                setTimeout(() => {
+                    // Simulate validation (Correct code: 1234)
+                    if (code === '1234') {
+                        verificationModal.style.display = 'none';
+                        if (document.getElementById('welcome-modal')) {
+                            document.getElementById('welcome-modal').style.display = 'flex';
+                            startConfetti();
+                        }
+                    } else {
+                        btn.textContent = originalText;
+                        verifyInputs.forEach(input => {
+                            input.classList.add('shake');
+                            input.value = ''; // Clear inputs on error
+                        });
+                        verifyInputs[0].focus();
+                        
+                        setTimeout(() => {
+                            verifyInputs.forEach(input => input.classList.remove('shake'));
+                        }, 400);
+                    }
+                }, 1000);
+            });
+        }
+
+        if (resendLink) {
+            resendLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                resendLink.textContent = 'Sending...';
+                setTimeout(() => {
+                    startResendTimer();
+                }, 1000);
+            });
+        }
+
+        // Welcome Modal Logic
+        const startExploringBtn = document.getElementById('start-exploring-btn');
+        if (startExploringBtn) {
+            startExploringBtn.addEventListener('click', () => {
+                window.location.href = 'index.html';
+            });
+        }
+
+        // Password Toggle Logic
+        document.querySelectorAll('.toggle-password').forEach(icon => {
+            icon.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const input = document.getElementById(targetId);
+                if (input) {
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    this.classList.toggle('fa-eye');
+                    this.classList.toggle('fa-eye-slash');
+                }
+            });
+        });
+
+        // Confetti Animation Logic
+        function startConfetti() {
+            const modalContent = document.querySelector('#welcome-modal .modal-content');
+            if (!modalContent) return;
+            
+            modalContent.style.overflow = 'hidden'; // Ensure confetti stays inside
+            
+            const colors = ['var(--c1)', 'var(--c2)', 'var(--c3)', '#ffffff'];
+            
+            for (let i = 0; i < 60; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                
+                const bg = colors[Math.floor(Math.random() * colors.length)];
+                const left = Math.random() * 100 + '%';
+                const animDuration = (Math.random() * 2 + 2) + 's';
+                const animDelay = (Math.random() * 1) + 's';
+                
+                confetti.style.background = bg;
+                confetti.style.left = left;
+                confetti.style.animationDuration = animDuration;
+                confetti.style.animationDelay = animDelay;
+                
+                if (Math.random() > 0.5) confetti.style.borderRadius = '50%';
+                
+                modalContent.appendChild(confetti);
+                
+                setTimeout(() => {
+                    confetti.remove();
+                }, 4000);
+            }
+        }
+    </script>
+</body>
+</html>

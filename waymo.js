@@ -7,9 +7,9 @@ const sampleRestaurants = [
                 review: "Authentic pasta and wood-fired pizza", 
                 image: "https://images.unsplash.com/photo-1603133872878-7f2b45f8b4a6?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=2b0c2e29a0f1a6a9b4f3c0a7e2d8f1c9",
                 topDishes: [
-                    {name: "Pasta Carbonara", price: 12.99},
-                    {name: "Margherita Pizza", price: 10.99},
-                    {name: "Tiramisu", price: 6.99}
+                    {name: "Pasta Carbonara", price: 12.99, image: "https://images.unsplash.com/photo-1612874742237-9828596437e3?q=80&w=800&auto=format&fit=crop"},
+                    {name: "Margherita Pizza", price: 10.99, image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?q=80&w=800&auto=format&fit=crop"},
+                    {name: "Tiramisu", price: 6.99, image: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?q=80&w=800&auto=format&fit=crop"}
                 ]
             },
             {
@@ -20,9 +20,9 @@ const sampleRestaurants = [
                 review: "Delicious dim sum and noodles", 
                 image: "https://images.unsplash.com/photo-1604908177522-4a6b9b2d3f5f?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=3c7d6f6e6e9f0a1a2b3c4d5e6f7a8b9c",
                 topDishes: [
-                    {name: "General Tso's Chicken", price: 11.99},
-                    {name: "Dim Sum Platter", price: 14.50},
-                    {name: "Fried Rice", price: 8.99}
+                    {name: "General Tso's Chicken", price: 11.99, image: "https://images.unsplash.com/photo-1623653387945-2fd25214f8fc?q=80&w=800&auto=format&fit=crop"},
+                    {name: "Dim Sum Platter", price: 14.50, image: "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?q=80&w=800&auto=format&fit=crop"},
+                    {name: "Fried Rice", price: 8.99, image: "https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=800&auto=format&fit=crop"}
                 ]
             },
             {
@@ -33,9 +33,9 @@ const sampleRestaurants = [
                 review: "Juicy burgers with fresh ingredients", 
                 image: "https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f",
                 topDishes: [
-                    {name: "Classic Burger", price: 9.99},
-                    {name: "Cheese Fries", price: 4.99},
-                    {name: "Milkshake", price: 5.50}
+                    {name: "Classic Burger", price: 9.99, image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=800&auto=format&fit=crop"},
+                    {name: "Cheese Fries", price: 4.99, image: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?q=80&w=800&auto=format&fit=crop"},
+                    {name: "Milkshake", price: 5.50, image: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?q=80&w=800&auto=format&fit=crop"}
                 ]
             },
             {
@@ -46,9 +46,9 @@ const sampleRestaurants = [
                 review: "Spicy curries and tandoori specialties", 
                 image: "https://images.unsplash.com/photo-1604908177117-1a2b3c4d5e6f?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=abcdef1234567890abcdef1234567890",
                 topDishes: [
-                    {name: "Butter Chicken", price: 12.99},
-                    {name: "Garlic Naan", price: 2.99},
-                    {name: "Samosas", price: 4.50}
+                    {name: "Butter Chicken", price: 12.99, image: "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?q=80&w=800&auto=format&fit=crop"},
+                    {name: "Garlic Naan", price: 2.99, image: "https://images.unsplash.com/photo-1626074353765-517a681e40be?q=80&w=800&auto=format&fit=crop"},
+                    {name: "Samosas", price: 4.50, image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?q=80&w=800&auto=format&fit=crop"}
                 ]
             }
         ];
@@ -67,6 +67,58 @@ const sampleRestaurants = [
         let currentQty = 1;
         const toppingsList = ["Extra Cheese", "Spicy Sauce", "Bacon Bits", "Garlic Dip", "Mushrooms", "Avocado"];
 
+        // --- Notification System ---
+        function getNotifications() {
+            return JSON.parse(localStorage.getItem('waymo_notifications') || '[]');
+        }
+
+        function saveNotifications(notifs) {
+            localStorage.setItem('waymo_notifications', JSON.stringify(notifs));
+            renderNotifications();
+        }
+
+        function addNotification(title, message) {
+            const notifs = getNotifications();
+            const newNotif = {
+                title,
+                message,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                id: Date.now() + Math.random()
+            };
+            notifs.unshift(newNotif); // Add to top
+            saveNotifications(notifs);
+        }
+
+        function renderNotifications() {
+            const list = document.getElementById('notif-list');
+            const badge = document.querySelector('.notification-badge');
+            if (!list) return;
+
+            const notifs = getNotifications();
+            
+            if (notifs.length === 0) {
+                list.innerHTML = '<li style="padding:15px; text-align:center; color:#888; list-style:none;">No new notifications</li>';
+                if (badge) badge.style.display = 'none';
+            } else {
+                list.innerHTML = notifs.map(n => `
+                    <li role="listitem" class="notif-item">
+                        <strong>${n.title}</strong>
+                        <p style="font-size: 0.9em; margin: 2px 0; color: #ccc;">${n.message}</p>
+                        <div class="meta">${n.time}</div>
+                    </li>
+                `).join('');
+                
+                if (badge) {
+                    badge.textContent = notifs.length;
+                    badge.style.display = 'block';
+                    // Trigger bounce animation
+                    badge.classList.remove('bounce');
+                    void badge.offsetWidth; 
+                    badge.classList.add('bounce');
+                }
+            }
+        }
+
         function openModal(item) {
             const modal = document.getElementById('item-modal');
             if (!modal) return;
@@ -76,6 +128,17 @@ const sampleRestaurants = [
             
             document.getElementById('modal-item-name').textContent = item.name;
             document.getElementById('modal-item-restaurant').textContent = item.restaurant;
+            
+            const imgEl = document.getElementById('modal-item-image');
+            if (imgEl) {
+                if (item.image) {
+                    imgEl.src = item.image;
+                    imgEl.style.display = 'block';
+                } else {
+                    imgEl.style.display = 'none';
+                }
+            }
+            
             document.getElementById('modal-qty').value = 1;
             
             const toppingsContainer = document.getElementById('modal-toppings-list');
@@ -114,16 +177,28 @@ const sampleRestaurants = [
             
             document.getElementById('qv-restaurant-name').textContent = restaurant.name;
             const list = document.getElementById('qv-dishes-list');
+            const imgEl = document.getElementById('qv-food-image');
+            
+            if (imgEl) {
+                imgEl.src = restaurant.image; // Default to restaurant image
+                imgEl.style.display = 'block';
+            }
+
             list.innerHTML = '';
             
             if (restaurant.topDishes) {
                 restaurant.topDishes.forEach(dish => {
-                    list.innerHTML += `
-                        <div class="qv-item">
-                            <span class="qv-item-name">${dish.name}</span>
-                            <span class="qv-item-price">$${dish.price.toFixed(2)}</span>
-                        </div>
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'qv-item';
+                    itemDiv.style.cursor = 'pointer';
+                    itemDiv.innerHTML = `
+                        <span class="qv-item-name">${dish.name}</span>
+                        <span class="qv-item-price">$${dish.price.toFixed(2)}</span>
                     `;
+                    itemDiv.addEventListener('click', () => {
+                        if (imgEl && dish.image) imgEl.src = dish.image;
+                    });
+                    list.appendChild(itemDiv);
                 });
             } else {
                 list.innerHTML = '<p>No top dishes available.</p>';
@@ -386,6 +461,27 @@ const sampleRestaurants = [
                         window.location.assign('./index.html#' + view);
                         return;
                     }
+                    // If we're on the separate orders page
+                    if (document.getElementById('orders-view')) {
+                        if (view === 'profile') {
+                             window.location.assign('./profile.html');
+                             return;
+                        }
+                        if (view === 'menu') {
+                            window.location.assign('./menu.html');
+                            return;
+                        }
+                        if (view === 'cart') {
+                            window.location.assign('./cart.html');
+                            return;
+                        }
+                        if (view === 'contact') {
+                            window.location.assign('./contact.html');
+                            return;
+                        }
+                        window.location.assign('./index.html#' + view);
+                        return;
+                    }
                     // Default SPA behavior on index: switch view
                     switchView(view);
                 });
@@ -466,8 +562,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    const closeModalBtn = document.querySelector('.close-modal');
-
     document.getElementById('modal-qty-minus').addEventListener('click', () => {
         if (currentQty > 1) {
             currentQty--;
@@ -482,14 +576,15 @@ document.addEventListener('DOMContentLoaded', function() {
         updateModalTotal();
     });
 
-    if (closeModalBtn) {
-        closeModalBtn.addEventListener('click', () => {
+    // Handle all close buttons (fixes issue where only the first modal closed)
+    document.querySelectorAll('.close-modal').forEach(btn => {
+        btn.addEventListener('click', () => {
             history.back();
         });
-    }
+    });
 
     window.addEventListener('click', (e) => {
-        if (e.target === modal) history.back();
+        if (e.target.classList.contains('modal')) history.back();
     });
 
     document.getElementById('modal-add-to-cart-btn').addEventListener('click', function() {
@@ -513,6 +608,9 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.setItem('cart', JSON.stringify(cart));
         
         updateCartBadge();
+        
+        // Trigger Notification
+        addNotification('Added to Cart', `Added ${currentQty}x ${currentItem.name}`);
         
         const originalText = btn.textContent;
         btn.innerHTML = '<i class="fas fa-check"></i>';
@@ -738,10 +836,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 confirmationModal.style.display = 'flex';
                 history.pushState({modalOpen: true}, '');
                 
+                // Save Order to History
+                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                if (cart.length > 0) {
+                    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                    const total = subtotal * 1.08; // Including 8% tax
+                    const orders = JSON.parse(localStorage.getItem('waymo_orders') || '[]');
+                    const newOrder = {
+                        id: '#' + Math.floor(100000 + Math.random() * 900000),
+                        date: new Date().toLocaleDateString(),
+                        items: cart,
+                        total: total
+                    };
+                    orders.unshift(newOrder);
+                    localStorage.setItem('waymo_orders', JSON.stringify(orders));
+                }
+
                 // Clear cart and update UI
                 localStorage.removeItem('cart');
                 loadCart();
                 updateCartBadge();
+
+                // Trigger Payment Notification
+                addNotification('Payment Successful', 'Your order has been confirmed!');
+
+                // Simulate "Delivery Done" after 10 seconds
+                setTimeout(() => {
+                    addNotification('Delivery Done', 'Your order has arrived at your location.');
+                }, 10000);
                 
                 btn.textContent = originalText;
                 btn.disabled = false;
@@ -844,14 +966,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const clearBtn = document.getElementById('clear-notifs');
     if (clearBtn) {
         clearBtn.addEventListener('click', function() {
-            const list = document.getElementById('notif-list');
-            if (list) {
-                list.innerHTML = '<li style="padding:15px; text-align:center; color:#888; list-style:none;">No new notifications</li>';
-                const badge = document.querySelector('.notification-badge');
-                if (badge) badge.style.display = 'none';
-            }
+            localStorage.removeItem('waymo_notifications');
+            renderNotifications();
         });
     }
+    
+    // Initial Render
+    renderNotifications();
+
+    // Simulate Realtime Website Notification (e.g., Promo)
+    setTimeout(() => {
+        if (document.getElementById('notif-list')) {
+            // Only add if we haven't spammed them recently (simple check)
+            const notifs = getNotifications();
+            const hasPromo = notifs.some(n => n.title === 'Flash Sale!');
+            if (!hasPromo) {
+                addNotification('Flash Sale!', 'Get 20% off all desserts for the next hour.');
+            }
+        }
+    }, 5000);
 
     // Real-time Product Interaction Analytics
     const viewsEl = document.getElementById('session-views');
@@ -868,5 +1001,637 @@ document.addEventListener('DOMContentLoaded', function() {
                 viewsEl.textContent = views;
             }
         });
+    }
+});
+
+// --- Profile Page Logic ---
+document.addEventListener('DOMContentLoaded', function() {
+    const profileView = document.getElementById('profile-view');
+    if (profileView) {
+        // Load User Data
+        const user = JSON.parse(localStorage.getItem('waymo_user'));
+        if (user) {
+            const nameEl = profileView.querySelector('h2');
+            const emailEl = profileView.querySelector('p');
+            const avatarEl = profileView.querySelector('.profile-avatar img');
+            
+            if (nameEl) nameEl.textContent = user.name;
+            if (emailEl) emailEl.textContent = user.email || 'Guest Account';
+            if (avatarEl) {
+                avatarEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=00FFCB&color=000&size=128`;
+            }
+        }
+
+        // --- Render Order History & Stats ---
+        const orders = JSON.parse(localStorage.getItem('waymo_orders') || '[]');
+        
+        // Update Orders Count Stat
+        const statsValues = profileView.querySelectorAll('.stat-value');
+        if (statsValues.length > 0) {
+            statsValues[0].textContent = orders.length;
+        }
+
+        // Inject History Section
+        const existingHistory = document.getElementById('order-history-section');
+        if (!existingHistory) {
+            const historyContainer = document.createElement('div');
+            historyContainer.id = 'order-history-section';
+            historyContainer.style.marginTop = '20px';
+            historyContainer.style.marginBottom = '20px';
+            
+            // Create Header with Clear Button
+            const historyHeader = document.createElement('div');
+            historyHeader.style.display = 'flex';
+            historyHeader.style.justifyContent = 'space-between';
+            historyHeader.style.alignItems = 'center';
+            historyHeader.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
+            historyHeader.style.paddingBottom = '10px';
+            historyHeader.style.marginBottom = '15px';
+
+            const historyTitle = document.createElement('h3');
+            historyTitle.textContent = 'Recent Orders';
+            historyTitle.style.color = 'var(--c1)';
+            historyTitle.style.fontFamily = "'Pacifico', cursive";
+            historyTitle.style.margin = '0';
+
+            const btnContainer = document.createElement('div');
+            btnContainer.style.display = 'flex';
+            btnContainer.style.gap = '10px';
+
+            const viewAllBtn = document.createElement('button');
+            viewAllBtn.className = 'btn-xs';
+            viewAllBtn.textContent = 'View All';
+            viewAllBtn.style.display = orders.length > 0 ? 'inline-block' : 'none';
+            viewAllBtn.onclick = () => location.href = 'orders.html';
+
+            const clearHistoryBtn = document.createElement('button');
+            clearHistoryBtn.id = 'clear-history-btn';
+            clearHistoryBtn.className = 'btn-xs';
+            clearHistoryBtn.textContent = 'Clear History';
+            clearHistoryBtn.style.display = orders.length > 0 ? 'inline-block' : 'none';
+
+            btnContainer.appendChild(viewAllBtn);
+            btnContainer.appendChild(clearHistoryBtn);
+
+            historyHeader.appendChild(historyTitle);
+            historyHeader.appendChild(btnContainer);
+            historyContainer.appendChild(historyHeader);
+
+            // Create List Container
+            const historyListContainer = document.createElement('div');
+            historyListContainer.id = 'order-history-list';
+            
+            if (orders.length === 0) {
+                historyListContainer.innerHTML = '<p style="color: #888; text-align: center; padding: 20px; background: rgba(255,255,255,0.03); border-radius: 10px;">No recent orders yet.</p>';
+            } else {
+                let historyHtml = '<div style="display: flex; flex-direction: column; gap: 15px;">';
+                orders.slice(0, 5).forEach(order => {
+                    const itemSummary = order.items.map(i => `${i.quantity}x ${i.name}`).join(', ');
+                    historyHtml += `
+                        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: var(--c2); font-weight: bold;">${order.id}</span>
+                                <span style="color: #888; font-size: 0.85em;">${order.date}</span>
+                            </div>
+                            <p style="color: #ddd; font-size: 0.9em; margin-bottom: 10px; line-height: 1.4;">${itemSummary}</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px;">
+                                <div>
+                                    <span style="font-size: 0.8em; color: var(--c3); display: block;">${order.items.length} Items</span>
+                                    <span style="color: var(--c1); font-weight: bold;">$${order.total.toFixed(2)}</span>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="btn-small receipt-btn" data-id="${order.id}" style="font-size: 0.8em; padding: 4px 12px;">Receipt</button>
+                                    <button class="btn-small reorder-btn" data-id="${order.id}" style="font-size: 0.8em; padding: 4px 12px;">Reorder</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                historyHtml += '</div>';
+                historyListContainer.innerHTML = historyHtml;
+            }
+            historyContainer.appendChild(historyListContainer);
+
+            // Receipt Logic
+            historyListContainer.querySelectorAll('.receipt-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const orderId = this.getAttribute('data-id');
+                    const order = orders.find(o => o.id === orderId);
+                    if (order) {
+                        let text = `WayMo Receipt\nOrder ID: ${order.id}\nDate: ${order.date}\n--------------------------------\n`;
+                        order.items.forEach(item => {
+                            text += `${item.quantity}x ${item.name} - $${(item.price * item.quantity).toFixed(2)}\n`;
+                        });
+                        text += `--------------------------------\nTotal: $${order.total.toFixed(2)}\n\nThank you for choosing WayMo!`;
+                        
+                        const blob = new Blob([text], { type: 'text/plain' });
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `WayMo_Receipt_${order.id}.txt`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        window.URL.revokeObjectURL(url);
+                    }
+                });
+            });
+
+            // Clear History Logic
+            clearHistoryBtn.addEventListener('click', () => {
+                if (confirm('Are you sure you want to clear your entire order history? This cannot be undone.')) {
+                    localStorage.removeItem('waymo_orders');
+                    
+                    // Update UI
+                    historyListContainer.innerHTML = '<p style="color: #888; text-align: center; padding: 20px; background: rgba(255,255,255,0.03); border-radius: 10px;">No recent orders yet.</p>';
+                    if (statsValues.length > 0) {
+                        statsValues[0].textContent = 0;
+                    }
+                    clearHistoryBtn.style.display = 'none';
+                    viewAllBtn.style.display = 'none';
+
+                    if (typeof addNotification === 'function') {
+                        addNotification('History Cleared', 'Your order history has been removed.');
+                    }
+                }
+            });
+            
+            // Reorder Logic
+            historyListContainer.querySelectorAll('.reorder-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const orderId = this.getAttribute('data-id');
+                    const order = orders.find(o => o.id === orderId);
+                    if (order) {
+                        const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
+                        // Add items to cart (generating new cartIds to avoid conflicts)
+                        const newItems = order.items.map(item => ({
+                            ...item,
+                            cartId: Date.now() + Math.random()
+                        }));
+                        const updatedCart = currentCart.concat(newItems);
+                        localStorage.setItem('cart', JSON.stringify(updatedCart));
+                        updateCartBadge();
+                        
+                        if (typeof addNotification === 'function') {
+                            addNotification('Reorder Successful', `Added items from ${orderId} to cart.`);
+                        }
+                        
+                        const originalText = this.textContent;
+                        this.textContent = 'Added!';
+                        setTimeout(() => {
+                            this.textContent = originalText;
+                        }, 2000);
+                    }
+                });
+            });
+            
+            const stats = profileView.querySelector('.profile-stats');
+            if (stats) {
+                stats.parentNode.insertBefore(historyContainer, stats.nextSibling);
+            }
+        }
+
+        // Handle Logout
+        const logoutBtn = profileView.querySelector('.menu-item.text-danger');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.removeItem('waymo_user');
+                window.location.href = 'landing.html';
+            });
+        }
+
+        // --- Edit Profile Logic (Injected) ---
+        const header = profileView.querySelector('.profile-header');
+        if (header && !document.getElementById('edit-profile-btn')) {
+            // Inject Edit Button
+            const editBtn = document.createElement('button');
+            editBtn.id = 'edit-profile-btn';
+            editBtn.className = 'btn-small';
+            editBtn.style.marginTop = '15px';
+            editBtn.innerHTML = '<i class="fas fa-pen"></i> Edit Profile';
+            header.appendChild(editBtn);
+
+            // Inject Modal HTML
+            const modalHtml = `
+                <div id="edit-profile-modal" class="modal">
+                    <div class="modal-content" style="max-width: 400px;">
+                        <span class="close-modal" id="close-edit-profile">&times;</span>
+                        <div class="modal-header" style="text-align: center;">
+                            <h2 style="font-family: 'Pacifico', cursive; color: var(--c1);">Edit Profile</h2>
+                        </div>
+                        <form id="edit-profile-form" style="margin-top: 20px;">
+                            <div class="form-group">
+                                <label for="edit-name" style="color: var(--c3); font-weight: bold; display: block; margin-bottom: 8px;">Full Name</label>
+                                <input type="text" id="edit-name" required style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid var(--c4); background: transparent; color: var(--c1);">
+                            </div>
+                            <button type="submit" style="width: 100%; margin-top: 15px; padding: 12px; background: var(--c2); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+            // Modal Logic
+            const modal = document.getElementById('edit-profile-modal');
+            const closeBtn = document.getElementById('close-edit-profile');
+            const form = document.getElementById('edit-profile-form');
+            const nameInput = document.getElementById('edit-name');
+
+            editBtn.addEventListener('click', () => {
+                const user = JSON.parse(localStorage.getItem('waymo_user'));
+                if (user) nameInput.value = user.name;
+                modal.style.display = 'flex';
+            });
+
+            closeBtn.addEventListener('click', () => modal.style.display = 'none');
+            window.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const user = JSON.parse(localStorage.getItem('waymo_user')) || {};
+                user.name = nameInput.value;
+                localStorage.setItem('waymo_user', JSON.stringify(user));
+                
+                // Update UI immediately
+                const nameEl = profileView.querySelector('h2');
+                const avatarEl = profileView.querySelector('.profile-avatar img');
+                if (nameEl) nameEl.textContent = user.name;
+                if (avatarEl) avatarEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=00FFCB&color=000&size=128`;
+                
+                modal.style.display = 'none';
+                if (typeof addNotification === 'function') {
+                    addNotification('Profile Updated', 'Your profile details have been saved.');
+                }
+            });
+        }
+
+        // --- Payment Methods Logic ---
+        const paymentLink = document.getElementById('payment-methods-link');
+        const paymentModal = document.getElementById('payment-methods-modal');
+        const closePaymentModal = document.getElementById('close-payment-methods');
+        const savePaymentBtn = document.getElementById('save-payment-method-btn');
+        const paymentOptions = document.querySelectorAll('.payment-option');
+
+        if (paymentLink && paymentModal) {
+            paymentLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Load saved preference
+                const savedMethod = localStorage.getItem('waymo_payment_pref') || 'card';
+                paymentOptions.forEach(opt => {
+                    if (opt.dataset.method === savedMethod) {
+                        opt.classList.add('selected');
+                    } else {
+                        opt.classList.remove('selected');
+                    }
+                });
+                paymentModal.style.display = 'flex';
+            });
+
+            if (closePaymentModal) {
+                closePaymentModal.addEventListener('click', () => {
+                    paymentModal.style.display = 'none';
+                });
+            }
+
+            paymentOptions.forEach(opt => {
+                opt.addEventListener('click', () => {
+                    paymentOptions.forEach(o => o.classList.remove('selected'));
+                    opt.classList.add('selected');
+                });
+            });
+
+            if (savePaymentBtn) {
+                savePaymentBtn.addEventListener('click', () => {
+                    const selected = document.querySelector('.payment-option.selected');
+                    if (selected) {
+                        const method = selected.dataset.method;
+                        localStorage.setItem('waymo_payment_pref', method);
+                        if (typeof addNotification === 'function') {
+                            addNotification('Payment Method Updated', `Default payment method set to ${selected.querySelector('span').textContent}`);
+                        }
+                        paymentModal.style.display = 'none';
+                    }
+                });
+            }
+            
+            window.addEventListener('click', (e) => {
+                if (e.target === paymentModal) paymentModal.style.display = 'none';
+            });
+        }
+
+        // --- Settings Modal Logic ---
+        const settingsLink = document.getElementById('settings-link');
+        const settingsModal = document.getElementById('settings-modal');
+        const closeSettings = document.getElementById('close-settings');
+        const notifToggle = document.getElementById('notif-toggle');
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+
+        if (settingsLink && settingsModal) {
+            settingsLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                const settings = JSON.parse(localStorage.getItem('waymo_settings') || '{"notifications": true, "darkMode": true}');
+                if (notifToggle) notifToggle.checked = settings.notifications;
+                if (darkModeToggle) darkModeToggle.checked = settings.darkMode;
+                settingsModal.style.display = 'flex';
+            });
+
+            if (closeSettings) {
+                closeSettings.addEventListener('click', () => {
+                    settingsModal.style.display = 'none';
+                });
+            }
+
+            const saveSettings = () => {
+                const settings = {
+                    notifications: notifToggle ? notifToggle.checked : true,
+                    darkMode: darkModeToggle ? darkModeToggle.checked : true
+                };
+                localStorage.setItem('waymo_settings', JSON.stringify(settings));
+            };
+
+            if (darkModeToggle) {
+                darkModeToggle.addEventListener('change', () => {
+                    if (darkModeToggle.checked) {
+                        document.body.classList.remove('light-mode');
+                    } else {
+                        document.body.classList.add('light-mode');
+                    }
+                    saveSettings();
+                });
+            }
+
+            if (notifToggle) {
+                notifToggle.addEventListener('change', saveSettings);
+            }
+            
+            window.addEventListener('click', (e) => {
+                if (e.target === settingsModal) settingsModal.style.display = 'none';
+            });
+        }
+
+        // --- Saved Addresses Logic ---
+        const addressLink = document.getElementById('saved-addresses-link');
+        const addressModal = document.getElementById('saved-addresses-modal');
+        const closeAddressModal = document.getElementById('close-saved-addresses');
+        const saveAddressBtn = document.getElementById('save-address-btn');
+        const addressOptions = document.querySelectorAll('.address-option');
+
+        if (addressLink && addressModal) {
+            addressLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Load saved preference
+                const savedAddress = localStorage.getItem('waymo_default_address') || 'home';
+                addressOptions.forEach(opt => {
+                    if (opt.dataset.type === savedAddress) {
+                        opt.classList.add('selected');
+                    } else {
+                        opt.classList.remove('selected');
+                    }
+                });
+                addressModal.style.display = 'flex';
+            });
+
+            if (closeAddressModal) {
+                closeAddressModal.addEventListener('click', () => {
+                    addressModal.style.display = 'none';
+                });
+            }
+
+            addressOptions.forEach(opt => {
+                opt.addEventListener('click', () => {
+                    addressOptions.forEach(o => o.classList.remove('selected'));
+                    opt.classList.add('selected');
+                });
+            });
+
+            if (saveAddressBtn) {
+                saveAddressBtn.addEventListener('click', () => {
+                    const selected = document.querySelector('.address-option.selected');
+                    if (selected) {
+                        const type = selected.dataset.type;
+                        localStorage.setItem('waymo_default_address', type);
+                        if (typeof addNotification === 'function') {
+                            addNotification('Address Updated', `Default delivery address set to ${selected.querySelector('strong').textContent}`);
+                        }
+                        addressModal.style.display = 'none';
+                    }
+                });
+            }
+            
+            window.addEventListener('click', (e) => {
+                if (e.target === addressModal) addressModal.style.display = 'none';
+            });
+        }
+
+        // --- Add New Address Modal Logic ---
+        const addNewAddressBtn = document.getElementById('add-new-address-btn');
+        const addAddressModal = document.getElementById('add-address-modal');
+        const closeAddAddressModal = document.getElementById('close-add-address');
+        const addAddressForm = document.getElementById('add-address-form');
+        const mapPreview = document.getElementById('address-map');
+        const useLocationBtn = document.getElementById('use-location-btn');
+
+        if (addNewAddressBtn && addAddressModal) {
+            addNewAddressBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (addressModal) addressModal.style.display = 'none';
+                addAddressModal.style.display = 'flex';
+            });
+
+            if (closeAddAddressModal) {
+                closeAddAddressModal.addEventListener('click', () => {
+                    addAddressModal.style.display = 'none';
+                    if (addressModal) addressModal.style.display = 'flex';
+                });
+            }
+
+            window.addEventListener('click', (e) => {
+                if (e.target === addAddressModal) {
+                    addAddressModal.style.display = 'none';
+                    if (addressModal) addressModal.style.display = 'flex';
+                }
+            });
+
+            if (mapPreview) {
+                mapPreview.addEventListener('click', (e) => {
+                    const rect = mapPreview.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const pin = mapPreview.querySelector('.map-pin');
+                    if (pin) {
+                        pin.style.left = x + 'px';
+                        pin.style.top = y + 'px';
+                    }
+                    
+                    // Simulate filling address
+                    const addrInput = document.getElementById('address-line1');
+                    if (addrInput) addrInput.value = "Pinned Location " + Math.floor(Math.random() * 100);
+                });
+            }
+
+            if (useLocationBtn) {
+                useLocationBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const originalText = useLocationBtn.innerHTML;
+                    useLocationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Locating...';
+                    
+                    setTimeout(() => {
+                        const addrInput = document.getElementById('address-line1');
+                        if (addrInput) addrInput.value = "Current GPS Location: 123 Satellite Way";
+                        
+                        if (mapPreview) {
+                            const pin = mapPreview.querySelector('.map-pin');
+                            if (pin) {
+                                pin.style.left = '50%';
+                                pin.style.top = '50%';
+                            }
+                        }
+                        useLocationBtn.innerHTML = originalText;
+                    }, 1500);
+                });
+            }
+
+            if (addAddressForm) {
+                addAddressForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const label = document.getElementById('address-label').value;
+                    const line1 = document.getElementById('address-line1').value;
+
+                    if (!label || !line1) return;
+
+                    const addressOptionsContainer = document.querySelector('.address-options');
+                    if (addressOptionsContainer) {
+                        let iconClass = 'fa-map-pin';
+                        if (label.toLowerCase().includes('home')) iconClass = 'fa-home';
+                        if (label.toLowerCase().includes('work') || label.toLowerCase().includes('office')) iconClass = 'fa-briefcase';
+
+                        const newAddressEl = document.createElement('div');
+                        newAddressEl.className = 'address-option';
+                        newAddressEl.dataset.type = label.toLowerCase().replace(/\s/g, '');
+                        newAddressEl.innerHTML = `
+                            <div class="address-icon"><i class="fas ${iconClass}"></i></div>
+                            <div class="address-details">
+                                <strong>${label}</strong>
+                                <span>${line1}</span>
+                            </div>
+                            <i class="fas fa-check check-icon"></i>
+                        `;
+                        
+                        newAddressEl.addEventListener('click', () => {
+                            document.querySelectorAll('.address-option').forEach(o => o.classList.remove('selected'));
+                            newAddressEl.classList.add('selected');
+                        });
+
+                        addressOptionsContainer.appendChild(newAddressEl);
+                    }
+
+                    addAddressModal.style.display = 'none';
+                    if (addressModal) addressModal.style.display = 'flex';
+                    addAddressForm.reset();
+                });
+            }
+        }
+    }
+});
+
+// --- Global Theme Init ---
+document.addEventListener('DOMContentLoaded', () => {
+    const settings = JSON.parse(localStorage.getItem('waymo_settings') || '{"notifications": true, "darkMode": true}');
+    if (!settings.darkMode) {
+        document.body.classList.add('light-mode');
+    }
+});
+
+// --- Orders Page Logic ---
+document.addEventListener('DOMContentLoaded', function() {
+    const ordersView = document.getElementById('orders-view');
+    if (ordersView) {
+        const orders = JSON.parse(localStorage.getItem('waymo_orders') || '[]');
+        const container = document.getElementById('full-order-history');
+        
+        if (orders.length === 0) {
+            container.innerHTML = '<p style="color: #888; text-align: center; padding: 20px; background: rgba(255,255,255,0.03); border-radius: 10px;">No orders found.</p>';
+        } else {
+            let html = '<div style="display: flex; flex-direction: column; gap: 15px;">';
+            orders.forEach(order => {
+                const itemSummary = order.items.map(i => `${i.quantity}x ${i.name}`).join(', ');
+                html += `
+                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="color: var(--c2); font-weight: bold;">${order.id}</span>
+                            <span style="color: #888; font-size: 0.85em;">${order.date}</span>
+                        </div>
+                        <p style="color: #ddd; font-size: 0.9em; margin-bottom: 10px; line-height: 1.4;">${itemSummary}</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px;">
+                            <div>
+                                <span style="font-size: 0.8em; color: var(--c3); display: block;">${order.items.length} Items</span>
+                                <span style="color: var(--c1); font-weight: bold;">$${order.total.toFixed(2)}</span>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn-small receipt-btn" data-id="${order.id}" style="font-size: 0.8em; padding: 4px 12px;">Receipt</button>
+                                <button class="btn-small reorder-btn" data-id="${order.id}" style="font-size: 0.8em; padding: 4px 12px;">Reorder</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+            
+            // Receipt Logic
+            container.querySelectorAll('.receipt-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const orderId = this.getAttribute('data-id');
+                    const order = orders.find(o => o.id === orderId);
+                    if (order) {
+                        let text = `WayMo Receipt\nOrder ID: ${order.id}\nDate: ${order.date}\n--------------------------------\n`;
+                        order.items.forEach(item => {
+                            text += `${item.quantity}x ${item.name} - $${(item.price * item.quantity).toFixed(2)}\n`;
+                        });
+                        text += `--------------------------------\nTotal: $${order.total.toFixed(2)}\n\nThank you for choosing WayMo!`;
+                        
+                        const blob = new Blob([text], { type: 'text/plain' });
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `WayMo_Receipt_${order.id}.txt`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        window.URL.revokeObjectURL(url);
+                    }
+                });
+            });
+            
+            // Reorder Logic
+            container.querySelectorAll('.reorder-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const orderId = this.getAttribute('data-id');
+                    const order = orders.find(o => o.id === orderId);
+                    if (order) {
+                        const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
+                        const newItems = order.items.map(item => ({
+                            ...item,
+                            cartId: Date.now() + Math.random()
+                        }));
+                        const updatedCart = currentCart.concat(newItems);
+                        localStorage.setItem('cart', JSON.stringify(updatedCart));
+                        updateCartBadge();
+                        
+                        if (typeof addNotification === 'function') {
+                            addNotification('Reorder Successful', `Added items from ${orderId} to cart.`);
+                        }
+                        
+                        const originalText = this.textContent;
+                        this.textContent = 'Added!';
+                        setTimeout(() => {
+                            this.textContent = originalText;
+                        }, 2000);
+                    }
+                });
+            });
+        }
     }
 });

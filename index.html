@@ -42,18 +42,7 @@
                     </div>
                 </div>
                 <ul id="notif-list">
-                    <li role="listitem" class="notif-item">
-                        <strong>Order ready</strong>
-                        <div class="meta">5m ago</div>
-                    </li>
-                    <li role="listitem" class="notif-item">
-                        <strong>New promo</strong>
-                        <div class="meta">1h ago</div>
-                    </li>
-                    <li role="listitem" class="notif-item">
-                        <strong>Delivery update</strong>
-                        <div class="meta">Yesterday</div>
-                    </li>
+                    <!-- Notifications will be injected here via JS -->
                 </ul>
             </div>
         </details>
@@ -118,6 +107,7 @@
     <div id="item-modal" class="modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
+            <img id="modal-item-image" class="modal-img" src="" alt="Food Item">
             <div class="modal-header">
                 <h2 id="modal-item-name">Dish Name</h2>
                 <p id="modal-item-restaurant">Restaurant Name</p>
@@ -129,7 +119,7 @@
                     <div class="quantity-selector">
                         <button id="modal-qty-minus" class="qty-btn">-</button>
                         <input type="number" id="modal-qty" value="1" min="1" readonly>
-                        <button id="modal-qty-plus" class="qty-btn">+</button>
+                           <button id="modal-qty-plus" class="qty-btn">+</button>
                     </div>
                 </div>
 
@@ -160,6 +150,7 @@
                 <p>Top 3 Dishes</p>
             </div>
             <div class="modal-body">
+                <img id="qv-food-image" class="modal-img" src="" alt="Food Preview">
                 <div id="qv-dishes-list" class="qv-list">
                     <!-- Dishes injected here -->
                 </div>
