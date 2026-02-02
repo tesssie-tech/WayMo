@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Waymo</title>
+    <link rel="stylesheet" href="Waymo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="logo" style="font-size: 1.6em; font-weight: bold;">
+            <i class="fas fa-burger" style="margin-right: 8px; color: var(--c1);"></i><span style="color: var(--c1);">Way</span><span style="color: var(--c2);">Mo</span>
+        </div>
+        <header>
+            <h1>Contact Us</h1>
+        </header>
+
+        <main id="contact-view">
+            <div class="contact-container">
+                <div style="text-align: center; margin-bottom: 20px; animation: popIn 0.6s ease-out;">
+                    <i class="fas fa-headset" style="font-size: 4em; color: var(--c2); filter: drop-shadow(0 0 10px rgba(255,0,107,0.3));"></i>
+                </div>
+                <p class="contact-intro">We'd love to hear from you! Send us a message below.</p>
+                
+                <form id="contact-form">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" placeholder="Your Name" required style="width: 100%;">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="Your Email" required style="width: 100%;">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" rows="5" placeholder="How can we help?" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: 100%; padding: 12px; border-radius: 8px; background: var(--c2); color: white; border: none; font-weight: bold; cursor: pointer;">Send Message</button>
+                </form>
+
+                <div class="contact-info">
+                    <div class="info-item">
+                        <i class="fas fa-phone"></i>
+                        <span>+1 (555) 123-4567</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>support@waymo.app</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>123 Foodie Lane, Tech City</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+ <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Waymo. All rights reserved.</p>
+             <div class="social-media">
+                <a href="https://facebook.com" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="https://twitter.com" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="https://instagram.com" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://linkedin.com" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+    </footer>
+        <nav class="bottom-nav" role="navigation" aria-label="Bottom navigation">
+            <button class="nav-item" data-view="home" aria-label="Home" onclick="location.href='index.html'">
+                <i class="fas fa-home icon"></i>
+                <span class="label">Home</span>
+            </button>
+            <button class="nav-item" data-view="menu" aria-label="Menu" onclick="location.href='menu.html'">
+                <i class="fas fa-utensils icon"></i>
+                <span class="label">Menu</span>
+            </button>
+            <button class="nav-item" data-view="cart" aria-label="Cart" onclick="location.href='cart.html'">
+                <i class="fas fa-shopping-cart icon"></i>
+                <span class="cart-badge" style="display: none;">0</span>
+                <span class="label">Cart</span>
+            </button>
+            <button class="nav-item" data-view="profile" aria-label="Profile" onclick="location.href='profile.html'">
+                <i class="fas fa-user icon"></i>
+                <span class="label">Profile</span>
+            </button>
+            <button class="nav-item active" data-view="contact" aria-label="Contact">
+                <i class="fas fa-headset icon"></i>
+                <span class="label">Contact</span>
+            </button>
+        </nav>
+   
+    <script src="waymo.js"></script>
+</body>
+</html>

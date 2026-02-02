@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="Waymo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>WayMo</title>
     
        
 </head>
 <body>
     <div class="container">
-        <div class="logo" style="font-size: 2em; font-weight: bold; color: #4CAF50;">
-            <span style="color: #FF5722;">Way</span><span>Mo</span>
+        <div class="logo" style="font-size: 2em; font-weight: bold;">
+            <i class="fas fa-burger" style="margin-right: 8px; color: var(--c1);"></i><span style="color: var(--c1);">Way</span><span style="color: var(--c2);">Mo</span>
         </div>
         <header>
             <h1>Home
@@ -26,16 +27,30 @@
             </summary>
 
             <div class="notification-menu" role="list" aria-label="Notification items">
-                <ul>
-                    <li role="listitem">
+                <div class="notif-header">
+                    <span>Live Analytics</span>
+                    <button id="clear-notifs" class="btn-xs">Clear</button>
+                </div>
+                <div class="analytics-dashboard">
+                    <div class="stat-box">
+                        <span class="stat-val" id="session-views">0</span>
+                        <span class="stat-lbl">Products Viewed</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-val" id="session-cart-val">$0.00</span>
+                        <span class="stat-lbl">Cart Value</span>
+                    </div>
+                </div>
+                <ul id="notif-list">
+                    <li role="listitem" class="notif-item">
                         <strong>Order ready</strong>
                         <div class="meta">5m ago</div>
                     </li>
-                    <li role="listitem">
+                    <li role="listitem" class="notif-item">
                         <strong>New promo</strong>
                         <div class="meta">1h ago</div>
                     </li>
-                    <li role="listitem">
+                    <li role="listitem" class="notif-item">
                         <strong>Delivery update</strong>
                         <div class="meta">Yesterday</div>
                     </li>
@@ -76,22 +91,80 @@
 
         <nav class="bottom-nav" role="navigation" aria-label="Bottom navigation">
             <button class="nav-item active" data-view="home" aria-label="Home">
-                <span class="icon">🏠</span>
+                <i class="fas fa-home icon"></i>
                 <span class="label">Home</span>
             </button>
             <button class="nav-item" data-view="menu" aria-label="Menu" onclick="location.href='menu.html'">
-                <span class="icon">📖</span>
+                <i class="fas fa-utensils icon"></i>
                 <span class="label">Menu</span>
             </button>
             <button class="nav-item" data-view="cart" aria-label="Cart">
-                <span class="icon">🛒</span>
+                <i class="fas fa-shopping-cart icon"></i>
+                <span class="cart-badge" style="display: none;">0</span>
                 <span class="label">Cart</span>
             </button>
-            <button class="nav-item" data-view="profile" aria-label="Profile">
-                <span class="icon">👤</span>
+            <button class="nav-item" data-view="profile" aria-label="Profile" onclick="location.href='profile.html'">
+                <i class="fas fa-user icon"></i>
                 <span class="label">Profile</span>
             </button>
+            <button class="nav-item" data-view="contact" aria-label="Contact" onclick="location.href='contact.html'">
+                <i class="fas fa-headset icon"></i>
+                <span class="label">Contact</span>
+            </button>
         </nav>
+    </div>
+
+    <!-- Add to Cart Modal -->
+    <div id="item-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-header">
+                <h2 id="modal-item-name">Dish Name</h2>
+                <p id="modal-item-restaurant">Restaurant Name</p>
+            </div>
+            
+            <div class="modal-body">
+                <div class="modal-section">
+                    <h3>How many plates?</h3>
+                    <div class="quantity-selector">
+                        <button id="modal-qty-minus" class="qty-btn">-</button>
+                        <input type="number" id="modal-qty" value="1" min="1" readonly>
+                        <button id="modal-qty-plus" class="qty-btn">+</button>
+                    </div>
+                </div>
+
+                <div class="modal-section">
+                    <h3>Add Toppings ($1.00 each)</h3>
+                    <div id="modal-toppings-list" class="toppings-grid">
+                        <!-- Toppings injected by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="total-display">
+                    <span>Total:</span>
+                    <span id="modal-total-price">$0.00</span>
+                </div>
+                <button id="modal-add-to-cart-btn" class="btn-primary">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick View Modal -->
+    <div id="quick-view-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" data-modal="quick-view-modal">&times;</span>
+            <div class="modal-header">
+                <h2 id="qv-restaurant-name">Restaurant Name</h2>
+                <p>Top 3 Dishes</p>
+            </div>
+            <div class="modal-body">
+                <div id="qv-dishes-list" class="qv-list">
+                    <!-- Dishes injected here -->
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="Waymo.js"></script>
