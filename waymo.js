@@ -62,6 +62,11 @@ const sampleRestaurants = [
 
         let currentSpecialIndex = 0;
 
+        // --- Global Comment State ---
+        const videoComments = JSON.parse(localStorage.getItem('waymo_video_comments') || '{}');
+        let activeCommentCountElement = null;
+        let activeVideoUrl = null;
+
         // --- Global Modal Logic ---
         let currentItem = null;
         let currentQty = 1;
@@ -355,6 +360,13 @@ const sampleRestaurants = [
         document.addEventListener('DOMContentLoaded', function() {
             initSpecials();
             const isIndexPage = !!document.getElementById('results') && !!document.getElementById('cuisine');
+            
+            // Real-time search listener for Home Page
+            const cuisineInput = document.getElementById('cuisine');
+            if (cuisineInput) {
+                cuisineInput.addEventListener('input', () => searchRestaurants(false));
+            }
+
             // initialize from hash if present (only for index page)
             if (isIndexPage) {
                 if (location.hash) {
@@ -637,10 +649,25 @@ document.addEventListener('DOMContentLoaded', function() {
             { id: 8, name: "Chocolate Brownie", restaurant: "Sweet Tooth", price: 5.99, image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&s=beef1234beef1234beef1234beef1234", category: "Desserts" }
         ];
 
-        function renderMenu(list) {
+        const itemsPerPage = 4;
+
+        function renderMenu(list, page = 1) {
             const container = document.getElementById('menu-list');
+            const paginationContainer = document.getElementById('pagination-controls');
+            
             container.innerHTML = '';
-            list.forEach(item => {
+            if (paginationContainer) paginationContainer.innerHTML = '';
+
+            // Pagination Logic
+            const totalPages = Math.ceil(list.length / itemsPerPage);
+            if (page < 1) page = 1;
+            if (page > totalPages && totalPages > 0) page = totalPages;
+            
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const paginatedItems = list.slice(start, end);
+
+            paginatedItems.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'restaurant-card';
                 card.innerHTML = `
@@ -663,16 +690,69 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (item) openModal(item);
                 });
             });
+
+            // Render Pagination Controls
+            if (totalPages > 1 && paginationContainer) {
+                const controls = document.createElement('div');
+                controls.className = 'pagination-wrapper';
+                controls.style.display = 'flex';
+                controls.style.justifyContent = 'flex-start';
+                controls.style.alignItems = 'center';
+                controls.style.gap = '15px';
+                controls.style.marginTop = '20px';
+                controls.style.width = '100%';
+
+                const prevBtn = document.createElement('button');
+                prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i> Prev';
+                prevBtn.className = 'btn-small';
+                if (page === 1) {
+                    prevBtn.style.opacity = '0.5';
+                    prevBtn.style.cursor = 'not-allowed';
+                } else {
+                    prevBtn.onclick = () => {
+                        renderMenu(list, page - 1);
+                        document.getElementById('menu-list').scrollIntoView({behavior: 'smooth', block: 'start'});
+                    };
+                }
+
+                const nextBtn = document.createElement('button');
+                nextBtn.innerHTML = 'Next <i class="fas fa-chevron-right"></i>';
+                nextBtn.className = 'btn-small';
+                if (page === totalPages) {
+                    nextBtn.style.opacity = '0.5';
+                    nextBtn.style.cursor = 'not-allowed';
+                } else {
+                    nextBtn.onclick = () => {
+                        renderMenu(list, page + 1);
+                        document.getElementById('menu-list').scrollIntoView({behavior: 'smooth', block: 'start'});
+                    };
+                }
+
+                const info = document.createElement('span');
+                info.textContent = `${page} / ${totalPages}`;
+                info.style.color = 'var(--c1)';
+                info.style.fontWeight = 'bold';
+
+                controls.appendChild(prevBtn);
+                controls.appendChild(info);
+                controls.appendChild(nextBtn);
+                paginationContainer.appendChild(controls);
+            }
         }
 
         // Search
         const searchBtn = document.getElementById('search-menu-btn');
-        if (searchBtn) {
-            searchBtn.addEventListener('click', () => {
-                const q = document.getElementById('menu-search').value.trim().toLowerCase();
-                const filtered = menuItems.filter(m => m.name.toLowerCase().includes(q) || m.restaurant.toLowerCase().includes(q));
-                renderMenu(filtered);
-            });
+        const menuSearchInput = document.getElementById('menu-search');
+
+        const handleMenuSearch = () => {
+            const q = menuSearchInput.value.trim().toLowerCase();
+            const filtered = menuItems.filter(m => m.name.toLowerCase().includes(q) || m.restaurant.toLowerCase().includes(q));
+            renderMenu(filtered);
+        };
+
+        if (searchBtn) searchBtn.addEventListener('click', handleMenuSearch);
+        if (menuSearchInput) {
+            menuSearchInput.addEventListener('input', handleMenuSearch);
         }
 
         // initial render
@@ -710,6 +790,418 @@ document.addEventListener('DOMContentLoaded', function() {
             window.addEventListener('resize', updateCategoryFade);
         }
 
+        // Video Feed Logic
+        // 1. Define Default Samples (moved from HTML to JS)
+        const sampleVideos = [
+            { url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4", poster: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800&auto=format&fit=crop", user: "@FoodieJane", rating: 5.0, likes: 120 },
+            { url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", poster: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=800&auto=format&fit=crop", user: "@HealthyMike", rating: 4.8, likes: 85 },
+            { url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4", poster: "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?q=80&w=800&auto=format&fit=crop", user: "@CrispyBites", rating: 4.9, likes: 200 },
+            { url: "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", poster: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?q=80&w=800&auto=format&fit=crop", user: "@SweetTooth", rating: 4.7, likes: 65 }
+        ];
+
+        // 2. Render Trending Feed
+        const videoFeedContainer = document.querySelector('.video-feed-container');
+        if (videoFeedContainer) {
+            const userVideoReviews = JSON.parse(localStorage.getItem('waymo_video_reviews') || '[]');
+            const allVideos = [...sampleVideos, ...userVideoReviews];
+            
+            // Filter: Only show if likes > 50 (Trending Logic)
+            const trendingVideos = allVideos.filter(v => (v.likes || 0) > 50);
+
+            if (trendingVideos.length === 0) {
+                videoFeedContainer.innerHTML = '<p style="color:#888; padding:20px;">No trending reviews right now.</p>';
+            } else {
+                videoFeedContainer.innerHTML = trendingVideos.map(v => `
+                    <div class="video-card" data-video="${v.url}">
+                        <div class="video-wrapper">
+                            <img src="${v.poster || 'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?q=80&w=800&auto=format&fit=crop'}" class="video-poster">
+                            <div class="play-icon"><i class="fas fa-play"></i></div>
+                            <div class="mute-btn" style="display: none;"><i class="fas fa-volume-up"></i></div>
+                            <div class="share-btn" style="display: none;"><i class="fas fa-share-alt"></i></div>
+                            <div class="like-btn" style="display: none;"><i class="fas fa-heart"></i></div>
+                            <div class="like-count" style="display: none;">${v.likes}</div>
+                            <div class="comment-btn" style="display: none;"><i class="fas fa-comment"></i></div>
+                            <div class="comment-count" style="display: none;">0</div>
+                            <div class="fullscreen-btn" style="display: none;"><i class="fas fa-expand"></i></div>
+                            <div class="video-progress-container">
+                                <div class="video-progress-bar"></div>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <span><i class="fas fa-user-circle"></i> ${v.user}</span>
+                            <span class="rating"><i class="fas fa-star" style="color: gold;"></i> ${v.rating}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // 3. Select newly rendered cards
+        const videoCards = document.querySelectorAll('.video-card');
+        
+        // Initialize comment counts from storage
+        videoCards.forEach(card => {
+            const url = card.dataset.video;
+            const countEl = card.querySelector('.comment-count');
+            if (url && countEl && videoComments[url]) {
+                countEl.textContent = videoComments[url].length;
+            }
+        });
+
+        const videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting && entry.target.tagName === 'VIDEO') {
+                    entry.target.pause();
+                }
+            });
+        }, { threshold: 0.5 });
+
+        function updateMuteIcon(btn, isMuted) {
+            btn.innerHTML = isMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+        }
+
+        videoCards.forEach(card => {
+            card.addEventListener('click', function(e) {
+                // Ignore if clicking the mute button directly
+                if (e.target.closest('.mute-btn')) return;
+                if (e.target.closest('.fullscreen-btn')) return;
+                if (e.target.closest('.share-btn')) return;
+                if (e.target.closest('.like-btn')) return;
+                if (e.target.closest('.comment-btn')) return;
+                if (e.target.closest('.video-progress-container')) return;
+
+                const wrapper = this.querySelector('.video-wrapper');
+                const videoUrl = this.dataset.video;
+                const muteBtn = this.querySelector('.mute-btn');
+                const shareBtn = this.querySelector('.share-btn');
+                const likeBtn = this.querySelector('.like-btn');
+                const likeCount = this.querySelector('.like-count');
+                const commentBtn = this.querySelector('.comment-btn');
+                const commentCount = this.querySelector('.comment-count');
+                const fullscreenBtn = this.querySelector('.fullscreen-btn');
+                
+                if (wrapper && videoUrl) {
+                    let video = wrapper.querySelector('video');
+                    
+                    if (!video) {
+                        // Stop other videos
+                        document.querySelectorAll('video').forEach(v => v.pause());
+                        
+                        // Create and play video
+                        video = document.createElement('video');
+                        video.src = videoUrl;
+                        video.autoplay = true;
+                        video.loop = true;
+                        video.style.width = '100%';
+                        video.style.height = '100%';
+                        video.style.objectFit = 'cover';
+                        
+                        // Update progress bar
+                        video.addEventListener('timeupdate', () => {
+                            const progressBar = wrapper.querySelector('.video-progress-bar');
+                            if (progressBar && video.duration) {
+                                const percent = (video.currentTime / video.duration) * 100;
+                                progressBar.style.width = percent + '%';
+                            }
+                        });
+
+                        // Hide poster and play icon
+                        const poster = wrapper.querySelector('.video-poster');
+                        const playIcon = wrapper.querySelector('.play-icon');
+                        if (poster) poster.style.display = 'none';
+                        if (playIcon) playIcon.style.display = 'none';
+                        
+                        // Insert video behind overlays
+                        wrapper.insertBefore(video, wrapper.firstChild);
+                        
+                        videoObserver.observe(video);
+                        
+                        // Show mute button
+                        if (muteBtn) {
+                            muteBtn.style.display = 'flex';
+                            video.muted = false; // Start with sound since user clicked
+                            updateMuteIcon(muteBtn, false);
+                        }
+                        // Show share button
+                        if (shareBtn) {
+                            shareBtn.style.display = 'flex';
+                        }
+                        // Show like button and count
+                        if (likeBtn) {
+                            likeBtn.style.display = 'flex';
+                            if (likeCount) likeCount.style.display = 'block';
+                        }
+                        // Show comment button and count
+                        if (commentBtn) {
+                            commentBtn.style.display = 'flex';
+                            if (commentCount) commentCount.style.display = 'block';
+                        }
+                        // Show fullscreen button
+                        if (fullscreenBtn) {
+                            fullscreenBtn.style.display = 'flex';
+                        }
+                    } else {
+                        // Toggle play/pause if already loaded
+                        if (video.paused) {
+                            document.querySelectorAll('video').forEach(v => v.pause());
+                            video.play();
+                        } else {
+                            video.pause();
+                        }
+                    }
+                }
+            });
+
+            // Mute button click handler
+            const muteBtn = card.querySelector('.mute-btn');
+            if (muteBtn) {
+                muteBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const wrapper = card.querySelector('.video-wrapper');
+                    const video = wrapper.querySelector('video');
+                    if (video) {
+                        video.muted = !video.muted;
+                        updateMuteIcon(this, video.muted);
+                    }
+                });
+            }
+
+            // Fullscreen button click handler
+            const fullscreenBtn = card.querySelector('.fullscreen-btn');
+            if (fullscreenBtn) {
+                fullscreenBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const wrapper = card.querySelector('.video-wrapper');
+                    const video = wrapper.querySelector('video');
+                    if (video) {
+                        if (video.requestFullscreen) {
+                            video.requestFullscreen();
+                        } else if (video.webkitRequestFullscreen) { /* Safari */
+                            video.webkitRequestFullscreen();
+                        } else if (video.msRequestFullscreen) { /* IE11 */
+                            video.msRequestFullscreen();
+                        }
+                    }
+                });
+            }
+
+            // Progress Bar Seek Logic
+            const progressContainer = card.querySelector('.video-progress-container');
+            if (progressContainer) {
+                progressContainer.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const wrapper = card.querySelector('.video-wrapper');
+                    const video = wrapper.querySelector('video');
+                    if (video && video.duration) {
+                        const rect = this.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const width = rect.width;
+                        const percent = Math.max(0, Math.min(1, x / width));
+                        video.currentTime = percent * video.duration;
+                    }
+                });
+            }
+
+            // Share button click handler
+            const shareBtn = card.querySelector('.share-btn');
+            if (shareBtn) {
+                shareBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const videoUrl = card.dataset.video;
+                    if (videoUrl) {
+                        navigator.clipboard.writeText(videoUrl).then(() => {
+                            const originalIcon = this.innerHTML;
+                            this.innerHTML = '<i class="fas fa-check"></i>';
+                            if (typeof addNotification === 'function') {
+                                addNotification('Link Copied', 'Video link copied to clipboard!');
+                            }
+                            setTimeout(() => {
+                                this.innerHTML = originalIcon;
+                            }, 2000);
+                        });
+                    }
+                });
+            }
+
+            // Like button click handler
+            const likeBtn = card.querySelector('.like-btn');
+            const likeCount = card.querySelector('.like-count');
+            if (likeBtn) {
+                likeBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    this.classList.toggle('liked');
+                    
+                    if (likeCount) {
+                        // Simple parsing for demo purposes
+                        let text = likeCount.textContent.replace(/,/g, '');
+                        let val = parseFloat(text);
+                        if (text.includes('k')) val *= 1000;
+                        
+                        if (this.classList.contains('liked')) {
+                            val++;
+                        } else {
+                            val--;
+                        }
+                        
+                        // Format back
+                        if (val >= 1000) likeCount.textContent = (val / 1000).toFixed(1) + 'k';
+                        else likeCount.textContent = Math.floor(val);
+                    }
+                });
+            }
+
+            // Comment button click handler
+            const commentBtn = card.querySelector('.comment-btn');
+            const commentCount = card.querySelector('.comment-count');
+            if (commentBtn) {
+                commentBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    activeCommentCountElement = commentCount;
+                    activeVideoUrl = card.dataset.video;
+                    
+                    const modal = document.getElementById('comment-modal');
+                    const list = document.getElementById('comment-list');
+                    
+                    // --- Owner-Only Clear Button Logic ---
+                    const header = modal ? modal.querySelector('.modal-header') : null;
+                    // Remove any existing button from previous opens
+                    const existingBtn = document.getElementById('clear-all-comments-btn');
+                    if (existingBtn) existingBtn.remove();
+
+                    // 1. Get Video Owner Name from card (e.g., "@FoodieJane")
+                    const ownerEl = card.querySelector('.video-info span');
+                    // Extract text, trim whitespace, take the last word (the username)
+                    const ownerName = ownerEl ? ownerEl.textContent.trim().split(' ').pop() : '';
+
+                    // 2. Get Current User Name
+                    const userObj = JSON.parse(localStorage.getItem('waymo_user') || '{}');
+                    const currentUserName = userObj.name ? '@' + userObj.name : '@You';
+
+                    // 3. Check Ownership: Only show if current user matches video owner
+                    if (header && currentUserName === ownerName) {
+                        const clearBtn = document.createElement('button');
+                        clearBtn.id = 'clear-all-comments-btn';
+                        clearBtn.className = 'btn-xs';
+                        clearBtn.style.marginTop = '10px';
+                        clearBtn.style.borderColor = '#ff4444';
+                        clearBtn.style.color = '#ff4444';
+                        clearBtn.innerHTML = '<i class="fas fa-trash"></i> Clear All Comments';
+                        clearBtn.onclick = () => {
+                            if(confirm('Are you sure you want to delete ALL comments for this video?')) {
+                                delete videoComments[activeVideoUrl];
+                                localStorage.setItem('waymo_video_comments', JSON.stringify(videoComments));
+                                list.innerHTML = '<div id="no-comments-msg" style="text-align:center; color:#888; padding:20px;">No comments yet. Be the first!</div>';
+                                if (activeCommentCountElement) activeCommentCountElement.textContent = '0';
+                            }
+                        };
+                        header.appendChild(clearBtn);
+                    }
+
+                    if (modal && list) {
+                        // Load existing comments or show empty
+                        const comments = videoComments[activeVideoUrl] || [];
+                        
+                        list.innerHTML = comments.map(c => `
+                            <div class="comment-item" data-id="${c.id || ''}">
+                                <div class="comment-user">
+                                    <span>${c.user} <span style="color:#aaa; font-size:0.8em; font-weight:normal;">${c.time || ''}</span></span>
+                                    ${c.user === '@You' ? '<button class="delete-comment-btn" title="Delete"><i class="fas fa-trash"></i></button>' : ''}
+                                </div>
+                                <div class="comment-text">${c.text}</div>
+                            </div>
+                        `).join('') || '<div id="no-comments-msg" style="text-align:center; color:#888; padding:20px;">No comments yet. Be the first!</div>';
+                        
+                        modal.style.display = 'flex';
+                        history.pushState({modalOpen: true}, '');
+                    }
+                });
+            }
+        });
+
+});
+
+// --- Comment Modal Logic ---
+document.addEventListener('DOMContentLoaded', function() {
+    const postBtn = document.getElementById('post-comment-btn');
+    const input = document.getElementById('comment-input');
+    const list = document.getElementById('comment-list');
+
+    if (postBtn && input && list) {
+        postBtn.addEventListener('click', () => {
+            const text = input.value.trim();
+            if (text) {
+                const newComment = document.createElement('div');
+                newComment.className = 'comment-item';
+                const commentData = { 
+                    user: "@You", 
+                    text: text, 
+                    id: Date.now(),
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+                newComment.dataset.id = commentData.id;
+                newComment.innerHTML = `
+                    <div class="comment-user">
+                        <span>${commentData.user} <span style="color:#aaa; font-size:0.8em; font-weight:normal;">${commentData.time}</span></span>
+                        <button class="delete-comment-btn" title="Delete"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="comment-text">${commentData.text}</div>
+                `;
+                
+                // Remove "No comments" message if it exists
+                const noMsg = document.getElementById('no-comments-msg');
+                if (noMsg) {
+                    noMsg.remove();
+                }
+                
+                // Save comment
+                if (activeVideoUrl) {
+                    if (!videoComments[activeVideoUrl]) videoComments[activeVideoUrl] = [];
+                    videoComments[activeVideoUrl].push(commentData);
+                    localStorage.setItem('waymo_video_comments', JSON.stringify(videoComments));
+                }
+
+                // Update count
+                if (activeCommentCountElement) {
+                    activeCommentCountElement.textContent = parseInt(activeCommentCountElement.textContent || 0) + 1;
+                }
+
+                list.appendChild(newComment);
+                input.value = '';
+                list.scrollTop = list.scrollHeight;
+            }
+        });
+    }
+
+    // Delete Comment Logic (Event Delegation)
+    if (list) {
+        list.addEventListener('click', function(e) {
+            if (e.target.closest('.delete-comment-btn')) {
+                const btn = e.target.closest('.delete-comment-btn');
+                const item = btn.closest('.comment-item');
+                const id = parseInt(item.dataset.id);
+                
+                // Remove from DOM
+                item.remove();
+                
+                // Remove from Data
+                if (activeVideoUrl && videoComments[activeVideoUrl]) {
+                    videoComments[activeVideoUrl] = videoComments[activeVideoUrl].filter(c => c.id !== id);
+                    localStorage.setItem('waymo_video_comments', JSON.stringify(videoComments));
+                }
+                
+                // Decrement Count
+                if (activeCommentCountElement) {
+                    let count = parseInt(activeCommentCountElement.textContent || 0);
+                    activeCommentCountElement.textContent = Math.max(0, count - 1);
+                }
+
+                // Show empty message if list is empty
+                if (list.children.length === 0) {
+                    list.innerHTML = '<div id="no-comments-msg" style="text-align:center; color:#888; padding:20px;">No comments yet. Be the first!</div>';
+                }
+            }
+        });
+    }
 });
 
 // --- Cart page logic (runs only when cart elements exist) ---
@@ -1018,7 +1510,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (nameEl) nameEl.textContent = user.name;
             if (emailEl) emailEl.textContent = user.email || 'Guest Account';
             if (avatarEl) {
-                avatarEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=00FFCB&color=000&size=128`;
+                avatarEl.src = user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=00FFCB&color=000&size=128`;
             }
         }
 
@@ -1029,6 +1521,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const statsValues = profileView.querySelectorAll('.stat-value');
         if (statsValues.length > 0) {
             statsValues[0].textContent = orders.length;
+        }
+        
+        // Update Reviews Count Stat
+        const userReviews = JSON.parse(localStorage.getItem('waymo_user_reviews') || '[]');
+        if (statsValues.length > 1) {
+            statsValues[1].textContent = userReviews.length;
         }
 
         // Inject History Section
@@ -1076,7 +1574,7 @@ document.addEventListener('DOMContentLoaded', function() {
             historyHeader.appendChild(historyTitle);
             historyHeader.appendChild(btnContainer);
             historyContainer.appendChild(historyHeader);
-
+ 
             // Create List Container
             const historyListContainer = document.createElement('div');
             historyListContainer.id = 'order-history-list';
@@ -1225,6 +1723,10 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <label for="edit-name" style="color: var(--c3); font-weight: bold; display: block; margin-bottom: 8px;">Full Name</label>
                                 <input type="text" id="edit-name" required style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid var(--c4); background: transparent; color: var(--c1);">
                             </div>
+                            <div class="form-group">
+                                <label for="edit-avatar" style="color: var(--c3); font-weight: bold; display: block; margin-bottom: 8px;">Avatar URL (Optional)</label>
+                                <input type="text" id="edit-avatar" placeholder="https://example.com/image.png" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid var(--c4); background: transparent; color: var(--c1);">
+                            </div>
                             <button type="submit" style="width: 100%; margin-top: 15px; padding: 12px; background: var(--c2); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Save Changes</button>
                         </form>
                     </div>
@@ -1237,10 +1739,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const closeBtn = document.getElementById('close-edit-profile');
             const form = document.getElementById('edit-profile-form');
             const nameInput = document.getElementById('edit-name');
+            const avatarInput = document.getElementById('edit-avatar');
 
             editBtn.addEventListener('click', () => {
                 const user = JSON.parse(localStorage.getItem('waymo_user'));
-                if (user) nameInput.value = user.name;
+                if (user) {
+                    nameInput.value = user.name;
+                    avatarInput.value = user.avatar || '';
+                }
                 modal.style.display = 'flex';
             });
 
@@ -1251,13 +1757,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.preventDefault();
                 const user = JSON.parse(localStorage.getItem('waymo_user')) || {};
                 user.name = nameInput.value;
+                user.avatar = avatarInput.value.trim();
                 localStorage.setItem('waymo_user', JSON.stringify(user));
                 
                 // Update UI immediately
                 const nameEl = profileView.querySelector('h2');
                 const avatarEl = profileView.querySelector('.profile-avatar img');
                 if (nameEl) nameEl.textContent = user.name;
-                if (avatarEl) avatarEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=00FFCB&color=000&size=128`;
+                if (avatarEl) avatarEl.src = user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=00FFCB&color=000&size=128`;
                 
                 modal.style.display = 'none';
                 if (typeof addNotification === 'function') {
@@ -1532,6 +2039,393 @@ document.addEventListener('DOMContentLoaded', function() {
                     addAddressForm.reset();
                 });
             }
+        }
+
+        // --- My Reviews Logic ---
+        const myReviewsLink = document.getElementById('my-reviews-link');
+        const myReviewsModal = document.getElementById('my-reviews-modal');
+        const closeMyReviews = document.getElementById('close-my-reviews');
+        const myReviewsList = document.getElementById('my-reviews-list');
+
+        function renderMyReviews() {
+            if (!myReviewsList) return;
+            const reviews = JSON.parse(localStorage.getItem('waymo_user_reviews') || '[]');
+            
+            // --- Clear All Button Logic ---
+            const header = myReviewsModal.querySelector('.modal-header');
+            const existingClearBtn = document.getElementById('clear-all-reviews-btn');
+            if (existingClearBtn) existingClearBtn.remove();
+
+            if (reviews.length > 0 && header) {
+                const clearBtn = document.createElement('button');
+                clearBtn.id = 'clear-all-reviews-btn';
+                clearBtn.className = 'btn-xs';
+                clearBtn.style.marginTop = '10px';
+                clearBtn.style.borderColor = '#ff4444';
+                clearBtn.style.color = '#ff4444';
+                clearBtn.innerHTML = '<i class="fas fa-trash"></i> Clear All Reviews';
+                clearBtn.onclick = () => {
+                    if(confirm('Are you sure you want to delete ALL your reviews? This cannot be undone.')) {
+                        // 1. Remove video reviews from global feed
+                        let videoReviews = JSON.parse(localStorage.getItem('waymo_video_reviews') || '[]');
+                        const userVideoUrls = reviews
+                            .filter(r => r.type === 'video' && r.videoUrl)
+                            .map(r => r.videoUrl);
+                        
+                        if (userVideoUrls.length > 0) {
+                            videoReviews = videoReviews.filter(v => !userVideoUrls.includes(v.url));
+                            localStorage.setItem('waymo_video_reviews', JSON.stringify(videoReviews));
+                        }
+
+                        // 2. Clear user reviews
+                        localStorage.removeItem('waymo_user_reviews');
+                        
+                        // 3. Update UI
+                        renderMyReviews();
+                        const statsValues = document.querySelectorAll('.stat-value');
+                        if (statsValues.length > 1) statsValues[1].textContent = '0';
+                        if (typeof addNotification === 'function') addNotification('Reviews Cleared', 'All your reviews have been deleted.');
+                    }
+                };
+                header.appendChild(clearBtn);
+            }
+
+            if (reviews.length === 0) {
+                myReviewsList.innerHTML = '<p style="text-align:center; color:#888; padding:20px;">You haven\'t written any reviews yet.</p>';
+                return;
+            }
+
+            myReviewsList.innerHTML = reviews.map(r => {
+                const stars = Array(5).fill(0).map((_, i) => 
+                    `<i class="${i < r.rating ? 'fas' : 'far'} fa-star" style="color: ${i < r.rating ? 'var(--c2)' : 'var(--c4)'}; font-size: 0.8em;"></i>`
+                ).join('');
+                
+                let mediaContent = '';
+                if (r.type === 'video' && r.videoUrl) {
+                    mediaContent = `
+                        <div style="margin-top: 10px; border-radius: 8px; overflow: hidden; background: #000;">
+                            <video src="${r.videoUrl}" controls style="width: 100%; max-height: 200px; object-fit: cover;"></video>
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div class="review-item" style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05);">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                            <div>
+                                <h3 style="color: var(--c1); font-size: 1.1em; margin-bottom: 2px;">${r.restaurant}</h3>
+                                <span style="color: #888; font-size: 0.8em;">${r.date}</span>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn-xs edit-review-btn" data-id="${r.id}" style="border-color: var(--c4); color: var(--c4); background: transparent; cursor: pointer;">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                                <button class="btn-xs delete-review-btn" data-id="${r.id}" style="border-color: #ff4444; color: #ff4444; background: transparent; cursor: pointer;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 8px;">${stars}</div>
+                        <p style="color: #ddd; font-size: 0.95em; line-height: 1.4;">${r.text}</p>
+                        ${mediaContent}
+                    </div>
+                `;
+            }).join('');
+
+            // Attach edit handlers
+            myReviewsList.querySelectorAll('.edit-review-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = Number(this.dataset.id);
+                    const reviews = JSON.parse(localStorage.getItem('waymo_user_reviews') || '[]');
+                    const review = reviews.find(r => r.id === id);
+                    
+                    if (review) {
+                        myReviewsModal.style.display = 'none';
+                        
+                        // Populate fields
+                        if (reviewRestaurantSelect && typeof sampleRestaurants !== 'undefined') {
+                            while (reviewRestaurantSelect.options.length > 1) reviewRestaurantSelect.remove(1);
+                            sampleRestaurants.forEach(r => {
+                                const opt = document.createElement('option');
+                                opt.value = r.name;
+                                opt.textContent = r.name;
+                                opt.style.color = 'black';
+                                reviewRestaurantSelect.appendChild(opt);
+                            });
+                        }
+                        reviewRestaurantSelect.value = review.restaurant;
+                        
+                        document.getElementById('review-rating').value = review.rating;
+                        const stars = document.querySelectorAll('.star-rating-input i');
+                        stars.forEach(s => {
+                            if (s.dataset.value <= review.rating) {
+                                s.classList.remove('far');
+                                s.classList.add('fas');
+                                s.style.color = 'var(--c2)';
+                            } else {
+                                s.classList.remove('fas');
+                                s.classList.add('far');
+                                s.style.color = 'var(--c4)';
+                            }
+                        });
+
+                        document.getElementById('review-text').value = review.text;
+
+                        const radios = document.querySelectorAll('input[name="review-type"]');
+                        const videoGroup = document.getElementById('video-url-group');
+                        const videoInput = document.getElementById('review-video-url');
+                        
+                        if (review.type === 'video') {
+                            radios.forEach(r => { if(r.value === 'video') r.checked = true; });
+                            videoGroup.style.display = 'block';
+                            videoInput.value = review.videoUrl || '';
+                            videoInput.required = true;
+                        } else {
+                            radios.forEach(r => { if(r.value === 'written') r.checked = true; });
+                            videoGroup.style.display = 'none';
+                            videoInput.value = '';
+                            videoInput.required = false;
+                        }
+
+                        reviewForm.dataset.editingId = review.id;
+                        reviewForm.querySelector('button[type="submit"]').textContent = 'Update Review';
+                        reviewModal.style.display = 'flex';
+                    }
+                });
+            });
+
+            // Attach delete handlers
+            myReviewsList.querySelectorAll('.delete-review-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = Number(this.dataset.id);
+                    if (confirm('Delete this review?')) {
+                        let reviews = JSON.parse(localStorage.getItem('waymo_user_reviews') || '[]');
+                        const reviewToDelete = reviews.find(r => r.id === id);
+                        
+                        if (reviewToDelete) {
+                            // Remove from user reviews
+                            reviews = reviews.filter(r => r.id !== id);
+                            localStorage.setItem('waymo_user_reviews', JSON.stringify(reviews));
+
+                            // If video, remove from global video feed
+                            if (reviewToDelete.type === 'video' && reviewToDelete.videoUrl) {
+                                let videoReviews = JSON.parse(localStorage.getItem('waymo_video_reviews') || '[]');
+                                videoReviews = videoReviews.filter(v => v.url !== reviewToDelete.videoUrl);
+                                localStorage.setItem('waymo_video_reviews', JSON.stringify(videoReviews));
+                            }
+
+                            renderMyReviews();
+                            const statsValues = document.querySelectorAll('.stat-value');
+                            if (statsValues.length > 1) statsValues[1].textContent = reviews.length;
+                            if (typeof addNotification === 'function') addNotification('Review Deleted', 'Your review has been removed.');
+                        }
+                    }
+                });
+            });
+        }
+
+        if (myReviewsLink && myReviewsModal) {
+            myReviewsLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                renderMyReviews();
+                myReviewsModal.style.display = 'flex';
+            });
+
+            if (closeMyReviews) {
+                closeMyReviews.addEventListener('click', () => {
+                    myReviewsModal.style.display = 'none';
+                });
+            }
+            
+            window.addEventListener('click', (e) => {
+                if (e.target === myReviewsModal) myReviewsModal.style.display = 'none';
+            });
+        }
+
+        // --- Create Review Logic ---
+        const reviewLink = document.getElementById('create-review-link');
+        const reviewModal = document.getElementById('create-review-modal');
+        const closeReviewModal = document.getElementById('close-create-review');
+        const reviewForm = document.getElementById('create-review-form');
+        const reviewRestaurantSelect = document.getElementById('review-restaurant');
+        const starContainer = document.querySelector('.star-rating-input');
+        const ratingInput = document.getElementById('review-rating');
+        const reviewTypeRadios = document.querySelectorAll('input[name="review-type"]');
+        const videoUrlGroup = document.getElementById('video-url-group');
+
+        // Toggle Video URL Input
+        if (reviewTypeRadios.length > 0 && videoUrlGroup) {
+            reviewTypeRadios.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    if (e.target.value === 'video') {
+                        videoUrlGroup.style.display = 'block';
+                        document.getElementById('review-video-url').required = true;
+                    } else {
+                        videoUrlGroup.style.display = 'none';
+                        document.getElementById('review-video-url').required = false;
+                    }
+                });
+            });
+        }
+
+        if (reviewLink && reviewModal) {
+            reviewLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Reset Edit Mode
+                if (reviewForm) {
+                    reviewForm.reset();
+                    delete reviewForm.dataset.editingId;
+                    reviewForm.querySelector('button[type="submit"]').textContent = 'Post Review';
+                    const stars = document.querySelectorAll('.star-rating-input i');
+                    stars.forEach(s => {
+                        s.classList.remove('fas');
+                        s.classList.add('far');
+                        s.style.color = 'var(--c4)';
+                    });
+                    if (videoUrlGroup) videoUrlGroup.style.display = 'none';
+                    const radios = document.querySelectorAll('input[name="review-type"]');
+                    if (radios.length > 0) radios[0].checked = true;
+                }
+                
+                // Populate restaurants from sampleRestaurants
+                if (reviewRestaurantSelect && typeof sampleRestaurants !== 'undefined') {
+                    // Clear existing options except the first one
+                    while (reviewRestaurantSelect.options.length > 1) {
+                        reviewRestaurantSelect.remove(1);
+                    }
+                    sampleRestaurants.forEach(r => {
+                        const opt = document.createElement('option');
+                        opt.value = r.name;
+                        opt.textContent = r.name;
+                        opt.style.color = 'black'; // Ensure visibility
+                        reviewRestaurantSelect.appendChild(opt);
+                    });
+                }
+                
+                reviewModal.style.display = 'flex';
+            });
+
+            if (closeReviewModal) {
+                closeReviewModal.addEventListener('click', () => {
+                    reviewModal.style.display = 'none';
+                });
+            }
+
+            // Star Rating Logic
+            if (starContainer) {
+                const stars = starContainer.querySelectorAll('i');
+                stars.forEach(star => {
+                    star.addEventListener('click', function() {
+                        const val = this.dataset.value;
+                        ratingInput.value = val;
+                        
+                        // Update visuals
+                        stars.forEach(s => {
+                            if (s.dataset.value <= val) {
+                                s.classList.remove('far');
+                                s.classList.add('fas');
+                                s.style.color = 'var(--c2)';
+                            } else {
+                                s.classList.remove('fas');
+                                s.classList.add('far');
+                                s.style.color = 'var(--c4)';
+                            }
+                        });
+                    });
+                });
+            }
+
+            // Handle Submit
+            if (reviewForm) {
+                reviewForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const rating = ratingInput.value;
+                    if (!rating || rating === "0") {
+                        alert("Please select a star rating.");
+                        return;
+                    }
+
+                    const editingId = reviewForm.dataset.editingId ? Number(reviewForm.dataset.editingId) : null;
+                    const isVideo = document.querySelector('input[name="review-type"]:checked').value === 'video';
+                    const videoUrl = isVideo ? document.getElementById('review-video-url').value : null;
+                    const reviews = JSON.parse(localStorage.getItem('waymo_user_reviews') || '[]');
+                    let likes = 0;
+
+                    if (editingId) {
+                        const existing = reviews.find(r => r.id === editingId);
+                        if (existing) likes = existing.likes || 0;
+                    }
+
+                    const newReview = {
+                        id: editingId || Date.now(),
+                        restaurant: reviewRestaurantSelect.value,
+                        rating: rating,
+                        text: document.getElementById('review-text').value,
+                        date: new Date().toLocaleDateString(),
+                        type: isVideo ? 'video' : 'written',
+                        videoUrl: videoUrl,
+                        likes: likes
+                    };
+
+                    if (editingId) {
+                        const index = reviews.findIndex(r => r.id === editingId);
+                        if (index !== -1) {
+                            // Handle video feed update
+                            const oldReview = reviews[index];
+                            let videoReviews = JSON.parse(localStorage.getItem('waymo_video_reviews') || '[]');
+                            if (oldReview.type === 'video' && oldReview.videoUrl) {
+                                videoReviews = videoReviews.filter(v => v.url !== oldReview.videoUrl);
+                            }
+                            if (isVideo) {
+                                const userObj = JSON.parse(localStorage.getItem('waymo_user') || '{}');
+                                const videoEntry = { url: videoUrl, user: userObj.name ? '@' + userObj.name : '@You', rating: rating, likes: likes, poster: '' };
+                                videoReviews.push(videoEntry);
+                            }
+                            localStorage.setItem('waymo_video_reviews', JSON.stringify(videoReviews));
+                            
+                            reviews[index] = newReview;
+                            if (typeof addNotification === 'function') addNotification('Review Updated', 'Your review has been updated.');
+                        }
+                    } else {
+                        reviews.unshift(newReview);
+                        // If it's a video review, save to global video reviews as well
+                        if (isVideo) {
+                            const videoReviews = JSON.parse(localStorage.getItem('waymo_video_reviews') || '[]');
+                            const userObj = JSON.parse(localStorage.getItem('waymo_user') || '{}');
+                            const videoEntry = { url: videoUrl, user: userObj.name ? '@' + userObj.name : '@You', rating: rating, likes: 0, poster: '' };
+                            videoReviews.push(videoEntry);
+                            localStorage.setItem('waymo_video_reviews', JSON.stringify(videoReviews));
+                        }
+                        if (typeof addNotification === 'function') addNotification('Review Posted', `You rated ${newReview.restaurant} ${newReview.rating} stars!`);
+                    }
+                    
+                    localStorage.setItem('waymo_user_reviews', JSON.stringify(reviews));
+
+                    // Update Stat
+                    if (statsValues.length > 1) {
+                        statsValues[1].textContent = reviews.length;
+                    }
+
+                    reviewForm.reset();
+                    delete reviewForm.dataset.editingId;
+                    reviewForm.querySelector('button[type="submit"]').textContent = 'Post Review';
+                    
+                    // Reset stars
+                    if (starContainer) {
+                        starContainer.querySelectorAll('i').forEach(s => {
+                            s.classList.remove('fas');
+                            s.classList.add('far');
+                            s.style.color = 'var(--c4)';
+                        });
+                    }
+                    reviewModal.style.display = 'none';
+                });
+            }
+
+            window.addEventListener('click', (e) => {
+                if (e.target === reviewModal) reviewModal.style.display = 'none';
+            });
         }
     }
 });

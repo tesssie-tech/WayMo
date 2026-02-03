@@ -23,8 +23,16 @@
             <div style="display:flex; gap:12px; align-items:center;">
                 <input id="menu-search" placeholder="Search dishes (e.g., Burger, Pasta)">
                 <button id="search-menu-btn">Search</button>
-                <button onclick="if(history.length>1){history.back()}else{location.href='index.html'}">Back</button>
+                  <button onclick="if(history.length>1){history.back()}else{location.href='index.html'}">Back</button>
             </div>
+        </section>
+
+        <section class="video-feed-section">
+            <h2><i class="fas fa-fire" style="color: var(--c2);"></i> Trending Reviews</h2>
+            <div class="video-feed-container">
+                <!-- Video cards injected by JS -->
+            </div>
+            <div class="fade-overlay"></div>
         </section>
 
         <div class="restaurants">
@@ -42,6 +50,7 @@
           </div>
         </nav>
             <div id="menu-list"></div>
+            <div id="pagination-controls"></div>
         </div>
           
 
@@ -108,6 +117,25 @@
         </div>
     </div>
 
+    <!-- Comment Modal -->
+    <div id="comment-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <span class="close-modal" data-modal="comment-modal">&times;</span>
+            <div class="modal-header">
+                <h2 style="font-family: 'Pacifico', cursive; color: var(--c1);">Comments</h2>
+                <p style="color: #ccc; font-size: 0.9em;">Join the conversation</p>
+            </div>
+            <div class="modal-body">
+                <div id="comment-list" class="comment-list">
+                    <!-- Comments injected here -->
+                </div>
+                <div class="comment-input-wrapper">
+                    <input type="text" id="comment-input" placeholder="Add a comment...">
+                    <button id="post-comment-btn"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
   
 
  <script src="Waymo.js"></script>

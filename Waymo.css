@@ -1174,7 +1174,7 @@
         line-height: 1.2;
         margin-bottom: 15px;
         font-family: 'Pacifico', cursive;
-        background: linear-gradient(45deg, var(--c1), var(--c2));
+        background: linear-gradient(45deg, var(--c2));
        background-clip: text;
         -webkit-text-fill-color: transparent;
     }
@@ -1198,7 +1198,7 @@
     .hero-img {
         width: 100%;
         border-radius: 20px;
-        border: 2px solid var(--c3);
+        border: 2px solid var(--c2);
         box-shadow: 0 0 40px rgba(133, 122, 255, 0.2);
         animation: float 6s ease-in-out infinite;
     }
@@ -1238,7 +1238,7 @@
     .cta-button-large {
         display: inline-block;
         padding: 16px 50px;
-        background: linear-gradient(90deg, var(--c2), var(--c3));
+        background: linear-gradient(90deg, var(--c1));
         color: white;
         font-size: 1.2em;
         font-weight: bold;
@@ -1602,6 +1602,17 @@
         box-shadow: 0 5px 20px rgba(0,0,0,0.1);
     }
 
+    /* Scroll Trigger Animation */
+    .scroll-trigger {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    .scroll-trigger.in-view {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
     /* --- Saved Addresses Modal --- */
     .address-options {
         display: flex;
@@ -1698,4 +1709,522 @@
         padding: 4px;
         text-align: center;
         pointer-events: none;
+    }
+
+    /* Video Feed Section */
+    .video-feed-section {
+        padding: 0 20px;
+        margin-bottom: 30px;
+        position: relative;
+    }
+    .video-feed-section h2 {
+        font-family: 'Pacifico', cursive;
+        color: var(--c1);
+        margin-bottom: 15px;
+       font-size: 1.5em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .video-feed-container {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        overflow-x: auto;
+        padding-bottom: 20px;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+    .video-feed-container::-webkit-scrollbar {
+        display: none;
+    }
+    .video-card {
+        position: relative;
+        border-radius: 15px;
+        overflow: hidden;
+        background: #000;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        flex-shrink: 0;
+        width: 280px;
+        transition: transform 0.2s;
+    }
+    .video-card:hover {
+        transform: scale(1.02);
+    }
+    .video-wrapper {
+        position: relative;
+        width: 100%;
+        height: 220px;
+    }
+    .video-poster {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.8;
+    }
+    .play-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 50px;
+        height: 50px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(5px);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 1.2em;
+        border: 2px solid #fff;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .video-card:hover .play-icon {
+        background: var(--c2);
+        border-color: var(--c2);
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+    .video-info {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 15px;
+        background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 60%, transparent 100%);
+        color: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+    .video-info span {
+        font-weight: bold;
+        font-size: 0.95em;
+    }
+    .video-info .rating {
+        background: rgba(0,0,0,0.6);
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.85em;
+        color: var(--c4);
+    }
+    .mute-btn {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        width: 35px;
+        height: 35px;
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        cursor: pointer;
+        z-index: 10;
+        border: 1px solid rgba(255,255,255,0.3);
+        transition: all 0.2s;
+        backdrop-filter: blur(4px);
+    }
+    .mute-btn:hover {
+        background: var(--c2);
+        border-color: var(--c2);
+        transform: scale(1.1);
+    }
+    .fullscreen-btn {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        width: 35px;
+        height: 35px;
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        cursor: pointer;
+        z-index: 10;
+        border: 1px solid rgba(255,255,255,0.3);
+        transition: all 0.2s;
+        backdrop-filter: blur(4px);
+    }
+    .fullscreen-btn:hover {
+        background: var(--c2);
+        border-color: var(--c2);
+        transform: scale(1.1);
+    }
+    .share-btn {
+        position: absolute;
+        top: 50px;
+        right: 15px;
+        width: 35px;
+        height: 35px;
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        cursor: pointer;
+        z-index: 10;
+        border: 1px solid rgba(255,255,255,0.3);
+        transition: all 0.2s;
+        backdrop-filter: blur(4px);
+    }
+    .share-btn:hover {
+        background: var(--c2);
+        border-color: var(--c2);
+        transform: scale(1.1);
+    }
+    .like-btn {
+        position: absolute;
+        top: 90px;
+        right: 15px;
+        width: 35px;
+        height: 35px;
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        cursor: pointer;
+        z-index: 10;
+        border: 1px solid rgba(255,255,255,0.3);
+        transition: all 0.2s;
+        backdrop-filter: blur(4px);
+    }
+    .like-btn:hover {
+        background: var(--c2);
+        border-color: var(--c2);
+        transform: scale(1.1);
+    }
+    .like-btn.liked {
+        background: var(--c2);
+        border-color: var(--c2);
+        animation: likePop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    @keyframes likePop {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.4); }
+        75% { transform: scale(0.9); }
+        100% { transform: scale(1.1); }
+    }
+    .like-count {
+        position: absolute;
+        top: 130px;
+        right: 15px;
+        width: 35px;
+        text-align: center;
+        color: #fff;
+        font-size: 0.75em;
+        font-weight: bold;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+        z-index: 10;
+        pointer-events: none;
+    }
+    .comment-btn {
+        position: absolute;
+        top: 150px;
+        right: 15px;
+        width: 35px;
+        height: 35px;
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        cursor: pointer;
+        z-index: 10;
+        border: 1px solid rgba(255,255,255,0.3);
+        transition: all 0.2s;
+        backdrop-filter: blur(4px);
+    }
+    .comment-btn:hover {
+        background: var(--c2);
+        border-color: var(--c2);
+        transform: scale(1.1);
+    }
+    .comment-count {
+        position: absolute;
+        top: 190px;
+        right: 15px;
+        width: 35px;
+        text-align: center;
+        color: #fff;
+        font-size: 0.75em;
+        font-weight: bold;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+        z-index: 10;
+        pointer-events: none;
+    }
+    .video-progress-container {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.3);
+        z-index: 20;
+        cursor: pointer;
+    }
+    .video-progress-bar {
+        height: 100%;
+        background: var(--c2);
+        width: 0%;
+        transition: width 0.1s linear;
+    }
+    .fade-overlay {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        width: 80px;
+        background: linear-gradient(to right, transparent, var(--bg));
+        pointer-events: none;
+        z-index: 5;
+    }
+
+    /* --- Testimonial Carousel Styles --- */
+    .testimonial-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        overflow: hidden;
+        border-radius: 15px;
+    }
+
+    .testimonial-track {
+        display: flex;
+        width: 100%;
+        transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .testimonial-card {
+        min-width: 100%;
+        padding: 30px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .t-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .t-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 2px solid var(--c2);
+        object-fit: cover;
+    }
+
+    .t-name {
+        color: var(--c1);
+        font-size: 1.2em;
+        margin-bottom: 5px;
+    }
+
+    .t-rating {
+        color: #FFD700;
+        font-size: 0.9em;
+    }
+
+    .t-text {
+        color: #ccc;
+        font-size: 1.1em;
+        line-height: 1.6;
+        font-style: italic;
+    }
+
+    .t-dots {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .t-dot {
+        width: 12px;
+        height: 12px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .t-dot.active {
+        background: var(--c2);
+        transform: scale(1.2);
+    }
+
+    /* --- FAQ Section Styles --- */
+    .faq-section {
+        width: 100%;
+        max-width: 800px;
+        margin: 80px auto 0;
+        padding: 0 20px;
+    }
+
+    .faq-item {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        margin-bottom: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .faq-item.active {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: var(--c2);
+    }
+
+    .faq-question {
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        font-weight: bold;
+        color: var(--c1);
+        font-size: 1.1em;
+        user-select: none;
+    }
+
+    .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        padding: 0 20px;
+        color: #ccc;
+        line-height: 1.6;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+
+    .faq-item.active .faq-answer {
+        padding-bottom: 20px;
+    }
+
+    .faq-toggle-icon {
+        transition: transform 0.3s ease;
+        color: var(--c2);
+    }
+
+    .faq-item.active .faq-toggle-icon {
+        transform: rotate(45deg);
+    }
+
+    /* --- Hero Slider Styles --- */
+    .hero-slider-wrapper {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        border-radius: 20px;
+        border: 2px solid var(--c2);
+        box-shadow: 0 0 40px rgba(133, 122, 255, 0.2);
+       
+    }
+
+    .hero-slider {
+        display: flex;
+        width: 300%; /* 3 images */
+        transition: transform 0.5s ease-in-out;
+    }
+
+    .hero-slide {
+        width: 33.333%;
+        height: 300px;
+        display: block;
+        object-fit: cover;
+    }
+
+    .hero-dots {
+        position: absolute;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        z-index: 10;
+        background: rgba(0,0,0,0.3);
+        padding: 5px 10px;
+        border-radius: 15px;
+    }
+
+    .hero-dot {
+        width: 10px;
+        height: 10px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .hero-dot.active {
+        background: var(--c2);
+        transform: scale(1.2);
+        opacity: 1;
+    }
+
+    /* Comment Modal Specifics */
+    .comment-list {
+        max-height: 300px;
+        overflow-y: auto;
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .comment-item {
+        background: rgba(255,255,255,0.05);
+        padding: 10px;
+        border-radius: 8px;
+        font-size: 0.9em;
+    }
+    .comment-user {
+        color: var(--c2);
+        font-weight: bold;
+        margin-bottom: 4px;
+        font-size: 0.9em;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .comment-text {
+        color: #ddd;
+    }
+    .comment-input-wrapper {
+        display: flex;
+        gap: 10px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding-top: 15px;
+    }
+    .delete-comment-btn {
+        background: transparent;
+        border: none;
+        color: #ff4444;
+        cursor: pointer;
+        font-size: 0.9em;
+        padding: 2px 5px;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+    }
+    .delete-comment-btn:hover {
+        opacity: 1;
     }

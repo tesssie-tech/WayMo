@@ -18,7 +18,7 @@
             <div class="header-buttons">
                 <a href="#" class="btn-login" id="login-btn">Login</a>
                 <a href="#" class="btn-signup" id="signup-btn">Sign Up</a>
-            </div>
+             </div>
         </header>
 
         <div class="landing-wrapper">
@@ -31,14 +31,22 @@
                 </a>
             </div>
 
-            <div class="hero-image-container" style="animation: fadeInUpSection 1s ease-out 0.3s backwards;">
-                <!-- Using a high-quality food image from Unsplash -->
-                <div id="hero-parallax-wrapper" style="width: 100%; will-change: transform;">
-                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200&auto=format&fit=crop" alt="Delicious Food" class="hero-img">
+            <div class="hero-image-container scroll-trigger">
+                <div class="hero-slider-wrapper">
+                    <div class="hero-slider">
+                        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200&auto=format&fit=crop" alt="Delicious Food 1" class="hero-slide">
+                        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=1200&auto=format&fit=crop" alt="Delicious Food 2" class="hero-slide">
+                        <img src="https://images.unsplash.com/photo-1482049016688-2d3e1b311543?q=80&w=1200&auto=format&fit=crop" alt="Delicious Food 3" class="hero-slide">
+                    </div>
+                    <div class="hero-dots">
+                        <div class="hero-dot active" data-index="0"></div>
+                        <div class="hero-dot" data-index="1"></div>
+                        <div class="hero-dot" data-index="2"></div>
+                    </div>
                 </div>
             </div>
 
-            <div class="features-grid" style="animation: fadeInUpSection 1s ease-out 0.6s backwards;">
+            <div class="features-grid scroll-trigger">
                 <div class="feature-card">
                     <i class="fas fa-robot"></i>
                     <h3>AI Recommendations</h3>
@@ -53,6 +61,128 @@
                     <i class="fas fa-heart"></i>
                     <h3>Curated for You</h3>
                     <p>Discover top-rated local gems and exclusive specials tailored to your taste profile.</p>
+                </div>
+            </div>
+
+            <div class="testimonials-section scroll-trigger" style="width: 100%; margin-top: 80px;">
+                <h2 style="font-family: 'Pacifico', cursive; color: var(--c1); font-size: 2.5em; margin-bottom: 30px; text-align: center;">What Our Users Say</h2>
+                
+                <div class="testimonial-wrapper">
+                    <div class="testimonial-track">
+                        <div class="testimonial-card">
+                            <div class="t-header">
+                                <img src="https://ui-avatars.com/api/?name=Sarah+J&background=FF006B&color=fff" class="t-avatar" alt="User">
+                                <div>
+                                    <h4 class="t-name">Sarah Jenkins</h4>
+                                    <div class="t-rating">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="t-text">"WayMo changed how I eat! The AI recommendations are spot on. It's like the app knows exactly what I'm craving before I do."</p>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="t-header">
+                                <img src="https://ui-avatars.com/api/?name=Mike+T&background=00FFCB&color=000" class="t-avatar" alt="User">
+                                <div>
+                                    <h4 class="t-name">Mike Thompson</h4>
+                                    <div class="t-rating">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="t-text">"Fastest delivery in the city. The real-time tracking is a game changer. I never have to guess where my food is anymore."</p>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="t-header">
+                                <img src="https://ui-avatars.com/api/?name=Jessica+R&background=857AFF&color=fff" class="t-avatar" alt="User">
+                                <div>
+                                    <h4 class="t-name">Jessica Rivera</h4>
+                                    <div class="t-rating">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="t-text">"Love the dark mode and the app vibe. Food arrives hot every time. The interface is so smooth and easy to use."</p>
+                        </div>
+                    </div>
+                    <div class="t-dots">
+                        <div class="t-dot active" data-index="0"></div>
+                        <div class="t-dot" data-index="1"></div>
+                        <div class="t-dot" data-index="2"></div>
+                    </div>
+                </div>
+            </div>
+
+             <div class="faq-section scroll-trigger">
+                <h2 style="font-family: 'Pacifico', cursive; color: var(--c1); font-size: 2.5em; margin-bottom: 30px; text-align: center;">Frequently Asked Questions</h2>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How does the AI recommendation work?</span>
+                        <i class="fas fa-plus faq-toggle-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our AI analyzes your past orders, ratings, and browsing behavior to suggest dishes that match your unique taste profile. The more you use WayMo, the smarter it gets!</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Is there a delivery fee?</span>
+                        <i class="fas fa-plus faq-toggle-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Delivery fees vary based on distance and restaurant policies. However, WayMo Pro members enjoy free delivery on all orders over $15.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Can I track my order in real-time?</span>
+                        <i class="fas fa-plus faq-toggle-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Absolutely! Once your order is confirmed, you can watch your delivery driver's progress on our live map from the kitchen to your doorstep.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What payment methods do you accept?</span>
+                        <i class="fas fa-plus faq-toggle-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We accept all major credit/debit cards, Apple Pay, Google Pay, and Cash on Delivery for select locations.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-section scroll-trigger" style="width: 100%; margin-top: 80px;">
+                <h2 style="font-family: 'Pacifico', cursive; color: var(--c1); font-size: 2.5em; margin-bottom: 15px;">Contact Us</h2>
+                <p style="color: #ccc; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    Have questions or feedback? We'd love to hear from you. Reach out to our team directly.
+                </p>
+                
+                <div class="features-grid" style="margin-top: 0;">
+                    <div class="feature-card">
+                        <i class="fas fa-envelope" style="font-size: 2.5em; color: var(--c2); margin-bottom: 20px;"></i>
+                        <h3 style="margin-bottom: 10px;">Email Support</h3>
+                        <p style="margin-bottom: 15px; color: #aaa;">Get in touch via email for any account or order issues.</p>
+                        <a href="mailto:support@waymo.app" style="color: var(--c2); text-decoration: none; font-weight: bold;">support@waymo.app</a>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-phone-alt" style="font-size: 2.5em; color: var(--c3); margin-bottom: 20px;"></i>
+                        <h3 style="margin-bottom: 10px;">Phone Support</h3>
+                        <p style="margin-bottom: 15px; color: #aaa;">Speak directly with our customer service team.</p>
+                        <a href="tel:+15551234567" style="color: var(--c3); text-decoration: none; font-weight: bold;">+1 (555) 123-4567</a>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-map-marked-alt" style="font-size: 2.5em; color: var(--c4); margin-bottom: 20px;"></i>
+                        <h3 style="margin-bottom: 10px;">HQ Location</h3>
+                        <p style="margin-bottom: 15px; color: #aaa;">Visit our main office for partnerships and inquiries.</p>
+                        <span style="color: var(--c4); font-weight: bold;">123 Foodie Lane, Tech City</span>
+                    </div>
                 </div>
             </div>
 
@@ -665,6 +795,114 @@
                 }, 4000);
             }
         }
+
+        // Testimonial Slider Logic
+        const tTrack = document.querySelector('.testimonial-track');
+        const tDots = document.querySelectorAll('.t-dot');
+        let currentTestimonial = 0;
+        const totalTestimonials = tDots.length;
+
+        function updateTestimonial(index) {
+            if (!tTrack) return;
+            tTrack.style.transform = `translateX(-${index * 100}%)`;
+            
+            tDots.forEach(d => d.classList.remove('active'));
+            if (tDots[index]) tDots[index].classList.add('active');
+            currentTestimonial = index;
+        }
+
+        if (tTrack && tDots.length > 0) {
+            setInterval(() => {
+                let next = currentTestimonial + 1;
+                if (next >= totalTestimonials) next = 0;
+                updateTestimonial(next);
+            }, 5000);
+
+            tDots.forEach(dot => {
+                dot.addEventListener('click', (e) => {
+                    const idx = parseInt(e.target.dataset.index);
+                    updateTestimonial(idx);
+                });
+            });
+        }
+
+        // FAQ Accordion Logic
+        const faqItems = document.querySelectorAll('.faq-item');
+        
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            question.addEventListener('click', () => {
+                // Close other open items
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                        otherItem.querySelector('.faq-answer').style.maxHeight = null;
+                    }
+                });
+
+                item.classList.toggle('active');
+                const answer = item.querySelector('.faq-answer');
+                if (item.classList.contains('active')) {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                } else {
+                    answer.style.maxHeight = null;
+                }
+            });
+        });
+
+        // Hero Slider Logic
+        const heroSlider = document.querySelector('.hero-slider');
+        const heroDots = document.querySelectorAll('.hero-dot');
+        let currentHeroSlide = 0;
+        const totalHeroSlides = heroDots.length;
+        let heroInterval;
+
+        function updateHeroSlider(index) {
+            if (!heroSlider) return;
+            heroSlider.style.transform = `translateX(-${index * (100 / totalHeroSlides)}%)`;
+            
+            heroDots.forEach(d => d.classList.remove('active'));
+            if (heroDots[index]) heroDots[index].classList.add('active');
+            currentHeroSlide = index;
+        }
+
+        function nextHeroSlide() {
+            let next = currentHeroSlide + 1;
+            if (next >= totalHeroSlides) next = 0;
+            updateHeroSlider(next);
+        }
+
+        function startHeroShow() {
+            if (heroInterval) clearInterval(heroInterval);
+            heroInterval = setInterval(nextHeroSlide, 4000);
+        }
+
+        if (heroSlider && heroDots.length > 0) {
+            startHeroShow();
+            heroDots.forEach(dot => {
+                dot.addEventListener('click', (e) => {
+                    const idx = parseInt(e.target.dataset.index);
+                    updateHeroSlider(idx);
+                    startHeroShow(); // Reset timer on interaction
+                });
+            });
+        }
+
+        // Scroll Animation Observer
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
+
+            document.querySelectorAll('.scroll-trigger').forEach(el => {
+                observer.observe(el);
+            });
+        });
     </script>
 </body>
 </html>
