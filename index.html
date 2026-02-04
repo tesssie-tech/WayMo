@@ -37,7 +37,7 @@
                         <span class="stat-lbl">Products Viewed</span>
                     </div>
                     <div class="stat-box">
-                        <span class="stat-val" id="session-cart-val">$0.00</span>
+                        <span class="stat-val" id="session-cart-val">₦0.00</span>
                         <span class="stat-lbl">Cart Value</span>
                     </div>
                 </div>
@@ -63,8 +63,8 @@
                     <div class="special-content">
                         <h3>Mario's Italian Kitchen</h3>
                         <p class="special-dish">Pasta Carbonara</p>
-                        <p class="original-price">$18.99</p>
-                        <p class="discount-price">$12.99</p>
+                        <p class="original-price">₦18.99</p>
+                        <p class="discount-price">₦12.99</p>
                         <p class="discount-badge">-32% OFF</p>
                         <button class="order-btn">Order Now</button>
                     </div>
@@ -124,7 +124,7 @@
                 </div>
 
                 <div class="modal-section">
-                    <h3>Add Toppings ($1.00 each)</h3>
+                    <h3>Add Toppings (₦1.00 each)</h3>
                     <div id="modal-toppings-list" class="toppings-grid">
                         <!-- Toppings injected by JS -->
                     </div>
@@ -134,7 +134,7 @@
             <div class="modal-footer">
                 <div class="total-display">
                     <span>Total:</span>
-                    <span id="modal-total-price">$0.00</span>
+                    <span id="modal-total-price">₦0.00</span>
                 </div>
                 <button id="modal-add-to-cart-btn" class="btn-primary">Add to Cart</button>
             </div>
@@ -154,6 +154,55 @@
                 <div id="qv-dishes-list" class="qv-list">
                     <!-- Dishes injected here -->
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onboarding Tour Modal -->
+    <div id="tour-modal" class="modal">
+        <div class="modal-content tour-modal-content">
+            <div class="tour-slide active" data-step="1">
+                <div class="tour-icon"><i class="fas fa-hand-spock"></i></div>
+                <h2 class="tour-title">Welcome to WayMo!</h2>
+                <p class="tour-desc">Your personal food discovery companion. Let's take a quick tour to show you how to get the best experience.</p>
+            </div>
+            <div class="tour-slide" data-step="2">
+                <div class="tour-icon"><i class="fas fa-search"></i></div>
+                <h2 class="tour-title">Find What You Crave</h2>
+                <p class="tour-desc">Use our smart search to find dishes by cuisine or name. Our AI will also recommend meals tailored just for you.</p>
+            </div>
+            <div class="tour-slide" data-step="3">
+                <div class="tour-icon"><i class="fas fa-utensils"></i></div>
+                <h2 class="tour-title">Explore the Menu</h2>
+                <p class="tour-desc">Browse "Top of Week" specials or dive into specific categories. Don't forget to check out video reviews!</p>
+            </div>
+            <div class="tour-slide" data-step="4">
+                <div class="tour-icon"><i class="fas fa-shopping-cart"></i></div>
+                <h2 class="tour-title">Easy Ordering</h2>
+                <p class="tour-desc">Customize your toppings, add to cart, and track your delivery in real-time from your profile.</p>
+            </div>
+            <div class="tour-slide" data-step="5">
+                <div class="tour-icon"><i class="fas fa-compass"></i></div>
+                <h2 class="tour-title">Navigate with Ease</h2>
+                <p class="tour-desc">Use the bottom bar to switch between Home, Menu, Cart, Profile, and Support instantly.</p>
+            </div>
+            
+            <div class="tour-controls">
+                <button id="tour-skip-btn" class="btn-xs" style="background: transparent; border: none; color: #888; font-size: 0.9em; cursor: pointer;">Skip</button>
+                <div class="tour-dots">
+                    <div class="tour-dot active"></div>
+                    <div class="tour-dot"></div>
+                    <div class="tour-dot"></div>
+                    <div class="tour-dot"></div>
+                    <div class="tour-dot"></div>
+                </div>
+                <button id="tour-next-btn" class="btn-primary" style="padding: 10px 25px; border-radius: 30px; background: var(--c2); color: white; border: none; font-weight: bold; cursor: pointer; transition: transform 0.2s;">Next</button>
+            </div>
+            <div style="margin-top: 20px;">
+                <label style="display: flex; align-items: center; justify-content: center; gap: 10px; color: #888; font-size: 0.9em; cursor: pointer;">
+                    <input type="checkbox" id="tour-dont-show" style="width: auto; flex: 0; accent-color: var(--c2);">
+                    Don't show again
+                </label>
             </div>
         </div>
     </div>

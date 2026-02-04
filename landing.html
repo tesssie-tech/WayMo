@@ -133,7 +133,7 @@
                         <i class="fas fa-plus faq-toggle-icon"></i>
                     </div>
                     <div class="faq-answer">
-                        <p>Delivery fees vary based on distance and restaurant policies. However, WayMo Pro members enjoy free delivery on all orders over $15.</p>
+                        <p>Delivery fees vary based on distance and restaurant policies. However, WayMo Pro members enjoy free delivery on all orders over ₦15.</p>
                     </div>
                 </div>
 
@@ -430,12 +430,19 @@
                 const name = email.split('@')[0]; // Use part of email as name if unknown
                 localStorage.setItem('waymo_user', JSON.stringify({ name: name, email: email }));
 
-                const btn = loginForm.querySelector('button');
-                const originalText = btn.textContent;
-                btn.textContent = 'Logging in...';
+                // Hide modal
+                if (loginModal) loginModal.style.display = 'none';
+
+                // Create and inject animation overlay
+                const overlay = document.createElement('div');
+                overlay.className = 'welcome-overlay';
+                const displayName = name.charAt(0).toUpperCase() + name.slice(1);
+                overlay.innerHTML = `<div class="welcome-mascot"><i class="fas fa-burger"></i></div><div class="welcome-text">Welcome Back, ${displayName}!</div>`;
+                document.body.appendChild(overlay);
+
                 setTimeout(() => {
                     window.location.href = 'index.html';
-                }, 1500);
+                }, 2000);
             });
         }
 
@@ -566,15 +573,16 @@
                 localStorage.setItem('waymo_user', JSON.stringify({ name: 'Guest', email: '' }));
 
                 getStartedModal.style.display = 'none';
-                const loader = document.getElementById('loading-overlay');
-                if (loader) {
-                    loader.style.display = 'flex';
-                    setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 2000);
-                } else {
+
+                // Create and inject animation overlay
+                const overlay = document.createElement('div');
+                overlay.className = 'welcome-overlay';
+                overlay.innerHTML = `<div class="welcome-mascot"><i class="fas fa-burger"></i></div><div class="welcome-text">Welcome, Guest!</div>`;
+                document.body.appendChild(overlay);
+
+                setTimeout(() => {
                     window.location.href = 'index.html';
-                }
+                }, 2000);
             });
         }
 

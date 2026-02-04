@@ -173,7 +173,7 @@ const sampleRestaurants = [
             const total = (basePrice + (toppingsCount * toppingPrice)) * currentQty;
             
             const totalEl = document.getElementById('modal-total-price');
-            if (totalEl) totalEl.textContent = '$' + total.toFixed(2);
+            if (totalEl) totalEl.textContent = '₦' + total.toFixed(2);
         }
 
         function openQuickView(restaurant) {
@@ -198,7 +198,7 @@ const sampleRestaurants = [
                     itemDiv.style.cursor = 'pointer';
                     itemDiv.innerHTML = `
                         <span class="qv-item-name">${dish.name}</span>
-                        <span class="qv-item-price">$${dish.price.toFixed(2)}</span>
+                        <span class="qv-item-price">₦${dish.price.toFixed(2)}</span>
                     `;
                     itemDiv.addEventListener('click', () => {
                         if (imgEl && dish.image) imgEl.src = dish.image;
@@ -234,8 +234,8 @@ const sampleRestaurants = [
                         ${img}
                         <h3>${special.restaurant}</h3>
                         <p class="special-dish">${special.dish}</p>
-                        <p class="original-price">$${special.originalPrice.toFixed(2)}</p>
-                        <p class="discount-price">$${special.discountPrice.toFixed(2)}</p>
+                        <p class="original-price">₦${special.originalPrice.toFixed(2)}</p>
+                        <p class="discount-price">₦${special.discountPrice.toFixed(2)}</p>
                         <p class="discount-badge">-${discount}% OFF</p>
                         <button class="order-btn" data-index="${index}">Order Now</button>
                     </div>
@@ -675,7 +675,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="card-body">
                         <h3>${item.name}</h3>
                         <p><strong>From:</strong> ${item.restaurant}</p>
-                        <p class="rating">Price: $${item.price.toFixed(2)}</p>
+                        <p class="rating">Price: ₦${item.price.toFixed(2)}</p>
                         <button class="order-btn" data-id="${item.id}">Add</button>
                     </div>
                 `;
@@ -1227,7 +1227,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="cart-item">
                     <div class="item-details">
                         <h3>${item.name}</h3>
-                        <p class="item-price">$${(item.price * item.quantity).toFixed(2)}</p>
+                        <p class="item-price">₦${(item.price * item.quantity).toFixed(2)}</p>
                     </div>
                     <div class="item-controls">
                         <div class="quantity-control">
@@ -1278,9 +1278,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const tax = subtotal * 0.08;
         const total = subtotal + tax;
 
-        document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
-        document.getElementById('tax').textContent = `$${tax.toFixed(2)}`;
-        document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+        document.getElementById('subtotal').textContent = `₦${subtotal.toFixed(2)}`;
+        document.getElementById('tax').textContent = `₦${tax.toFixed(2)}`;
+        document.getElementById('total').textContent = `₦${total.toFixed(2)}`;
     }
 
     loadCart();
@@ -1412,7 +1412,7 @@ function updateCartBadge() {
     const cartValEl = document.getElementById('session-cart-val');
     if (cartValEl) {
         const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        cartValEl.textContent = '$' + total.toFixed(2);
+        cartValEl.textContent = '₦' + total.toFixed(2);
     }
 }
 document.addEventListener('DOMContentLoaded', updateCartBadge);
@@ -1595,7 +1595,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px;">
                                 <div>
                                     <span style="font-size: 0.8em; color: var(--c3); display: block;">${order.items.length} Items</span>
-                                    <span style="color: var(--c1); font-weight: bold;">$${order.total.toFixed(2)}</span>
+                                    <span style="color: var(--c1); font-weight: bold;">₦${order.total.toFixed(2)}</span>
                                 </div>
                                 <div style="display: flex; gap: 8px;">
                                     <button class="btn-small receipt-btn" data-id="${order.id}" style="font-size: 0.8em; padding: 4px 12px;">Receipt</button>
@@ -1618,9 +1618,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (order) {
                         let text = `WayMo Receipt\nOrder ID: ${order.id}\nDate: ${order.date}\n--------------------------------\n`;
                         order.items.forEach(item => {
-                            text += `${item.quantity}x ${item.name} - $${(item.price * item.quantity).toFixed(2)}\n`;
+                            text += `${item.quantity}x ${item.name} - ₦${(item.price * item.quantity).toFixed(2)}\n`;
                         });
-                        text += `--------------------------------\nTotal: $${order.total.toFixed(2)}\n\nThank you for choosing WayMo!`;
+                        text += `--------------------------------\nTotal: ₦${order.total.toFixed(2)}\n\nThank you for choosing WayMo!`;
                         
                         const blob = new Blob([text], { type: 'text/plain' });
                         const url = window.URL.createObjectURL(blob);
@@ -1689,26 +1689,59 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
+        // Replay Tour Logic
+        const replayTourBtn = profileView.querySelector('#replay-tour-link');
+        if (replayTourBtn) {
+            replayTourBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.location.href = 'index.html?tour=true';
+            });
+        }
+
         // Handle Logout
         const logoutBtn = profileView.querySelector('.menu-item.text-danger');
         if (logoutBtn) {
             logoutBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                localStorage.removeItem('waymo_user');
-                window.location.href = 'landing.html';
+                
+                // Create and inject animation overlay
+                const overlay = document.createElement('div');
+                overlay.className = 'logout-overlay';
+                overlay.innerHTML = `<div class="logout-mascot"><i class="fas fa-burger"></i></div><div class="logout-text">Byee!</div>`;
+                document.body.appendChild(overlay);
+
+                setTimeout(() => {
+                    localStorage.removeItem('waymo_user');
+                    window.location.href = 'landing.html';
+                }, 2000);
             });
         }
 
         // --- Edit Profile Logic (Injected) ---
         const header = profileView.querySelector('.profile-header');
         if (header && !document.getElementById('edit-profile-btn')) {
+            // Button Container
+            const btnContainer = document.createElement('div');
+            btnContainer.style.display = 'flex';
+            btnContainer.style.justifyContent = 'center';
+            btnContainer.style.gap = '10px';
+            btnContainer.style.marginTop = '15px';
+
             // Inject Edit Button
             const editBtn = document.createElement('button');
             editBtn.id = 'edit-profile-btn';
             editBtn.className = 'btn-small';
-            editBtn.style.marginTop = '15px';
             editBtn.innerHTML = '<i class="fas fa-pen"></i> Edit Profile';
-            header.appendChild(editBtn);
+            
+            // Inject View Button
+            const viewBtn = document.createElement('button');
+            viewBtn.id = 'view-avatar-btn';
+            viewBtn.className = 'btn-small';
+            viewBtn.innerHTML = '<i class="fas fa-eye"></i> Take a Look';
+
+            btnContainer.appendChild(editBtn);
+            btnContainer.appendChild(viewBtn);
+            header.appendChild(btnContainer);
 
             // Inject Modal HTML
             const modalHtml = `
@@ -1724,17 +1757,48 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <input type="text" id="edit-name" required style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid var(--c4); background: transparent; color: var(--c1);">
                             </div>
                             <div class="form-group">
-                                <label for="edit-avatar" style="color: var(--c3); font-weight: bold; display: block; margin-bottom: 8px;">Avatar URL (Optional)</label>
-                                <input type="text" id="edit-avatar" placeholder="https://example.com/image.png" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid var(--c4); background: transparent; color: var(--c1);">
+                                <label for="edit-avatar" style="color: var(--c3); font-weight: bold; display: block; margin-bottom: 8px;">Upload Avatar</label>
+                                <input type="file" id="edit-avatar" accept="image/*" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid var(--c4); background: transparent; color: var(--c1);">
                             </div>
                             <button type="submit" style="width: 100%; margin-top: 15px; padding: 12px; background: var(--c2); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Save Changes</button>
                         </form>
                     </div>
                 </div>
+                <div id="view-avatar-modal" class="modal">
+                    <div class="modal-content" style="max-width: 500px; text-align: center; background: transparent; box-shadow: none; border: none; padding: 0;">
+                        <span class="close-modal" id="close-view-avatar" style="color: white; font-size: 2em; position: absolute; top: -40px; right: 0; opacity: 1; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">&times;</span>
+                        <img id="view-avatar-img" src="" style="width: 100%; max-height: 80vh; object-fit: contain; border-radius: 15px; box-shadow: 0 0 50px rgba(0,0,0,0.8); background: #000;">
+                    </div>
+                </div>
             `;
             document.body.insertAdjacentHTML('beforeend', modalHtml);
 
-            // Modal Logic
+            // --- View Avatar Logic ---
+            const viewModal = document.getElementById('view-avatar-modal');
+            const viewImg = document.getElementById('view-avatar-img');
+            const closeViewBtn = document.getElementById('close-view-avatar');
+            
+            const openViewModal = () => {
+                const avatarEl = profileView.querySelector('.profile-avatar img');
+                if (avatarEl) {
+                    viewImg.src = avatarEl.src;
+                    viewModal.style.display = 'flex';
+                }
+            };
+
+            viewBtn.addEventListener('click', openViewModal);
+            
+            const avatarEl = profileView.querySelector('.profile-avatar img');
+            if (avatarEl) {
+                avatarEl.style.cursor = 'pointer';
+                avatarEl.title = 'Take a Look';
+                avatarEl.addEventListener('click', openViewModal);
+            }
+
+            closeViewBtn.addEventListener('click', () => viewModal.style.display = 'none');
+            window.addEventListener('click', (e) => { if (e.target === viewModal) viewModal.style.display = 'none'; });
+
+            // --- Edit Profile Logic ---
             const modal = document.getElementById('edit-profile-modal');
             const closeBtn = document.getElementById('close-edit-profile');
             const form = document.getElementById('edit-profile-form');
@@ -1745,7 +1809,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const user = JSON.parse(localStorage.getItem('waymo_user'));
                 if (user) {
                     nameInput.value = user.name;
-                    avatarInput.value = user.avatar || '';
+                    avatarInput.value = ''; // Reset file input
                 }
                 modal.style.display = 'flex';
             });
@@ -1757,18 +1821,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.preventDefault();
                 const user = JSON.parse(localStorage.getItem('waymo_user')) || {};
                 user.name = nameInput.value;
-                user.avatar = avatarInput.value.trim();
-                localStorage.setItem('waymo_user', JSON.stringify(user));
                 
-                // Update UI immediately
-                const nameEl = profileView.querySelector('h2');
-                const avatarEl = profileView.querySelector('.profile-avatar img');
-                if (nameEl) nameEl.textContent = user.name;
-                if (avatarEl) avatarEl.src = user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=00FFCB&color=000&size=128`;
-                
-                modal.style.display = 'none';
-                if (typeof addNotification === 'function') {
-                    addNotification('Profile Updated', 'Your profile details have been saved.');
+                const saveUser = () => {
+                    localStorage.setItem('waymo_user', JSON.stringify(user));
+                    
+                    // Update UI immediately
+                    const nameEl = profileView.querySelector('h2');
+                    const avatarEl = profileView.querySelector('.profile-avatar img');
+                    if (nameEl) nameEl.textContent = user.name;
+                    if (avatarEl) avatarEl.src = user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=00FFCB&color=000&size=128`;
+                    
+                    modal.style.display = 'none';
+                    if (typeof addNotification === 'function') {
+                        addNotification('Profile Updated', 'Your profile details have been saved.');
+                    }
+                };
+
+                const file = avatarInput.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        user.avatar = event.target.result;
+                        saveUser();
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    saveUser();
                 }
             });
         }
@@ -2461,7 +2539,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px;">
                             <div>
                                 <span style="font-size: 0.8em; color: var(--c3); display: block;">${order.items.length} Items</span>
-                                <span style="color: var(--c1); font-weight: bold;">$${order.total.toFixed(2)}</span>
+                                <span style="color: var(--c1); font-weight: bold;">₦${order.total.toFixed(2)}</span>
                             </div>
                             <div style="display: flex; gap: 8px;">
                                 <button class="btn-small receipt-btn" data-id="${order.id}" style="font-size: 0.8em; padding: 4px 12px;">Receipt</button>
@@ -2482,9 +2560,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (order) {
                         let text = `WayMo Receipt\nOrder ID: ${order.id}\nDate: ${order.date}\n--------------------------------\n`;
                         order.items.forEach(item => {
-                            text += `${item.quantity}x ${item.name} - $${(item.price * item.quantity).toFixed(2)}\n`;
+                            text += `${item.quantity}x ${item.name} - ₦${(item.price * item.quantity).toFixed(2)}\n`;
                         });
-                        text += `--------------------------------\nTotal: $${order.total.toFixed(2)}\n\nThank you for choosing WayMo!`;
+                        text += `--------------------------------\nTotal: ₦${order.total.toFixed(2)}\n\nThank you for choosing WayMo!`;
                         
                         const blob = new Blob([text], { type: 'text/plain' });
                         const url = window.URL.createObjectURL(blob);
@@ -2527,5 +2605,80 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
         }
+    }
+});
+
+// --- Onboarding Tour Logic ---
+document.addEventListener('DOMContentLoaded', function() {
+    const tourModal = document.getElementById('tour-modal');
+    if (!tourModal) return;
+
+    // Get current user to make the tour status user-specific
+    const user = JSON.parse(localStorage.getItem('waymo_user') || '{}');
+    const userKey = user.email ? `waymo_tour_seen_${user.email}` : 'waymo_tour_seen_guest';
+
+    // Check URL params for forced tour
+    const urlParams = new URLSearchParams(window.location.search);
+    const forceTour = urlParams.get('tour') === 'true';
+
+    // Check if user has seen tour or if forced
+    if (!localStorage.getItem(userKey) || forceTour) {
+        // Show tour after a short delay for better UX
+        setTimeout(() => {
+            tourModal.style.display = 'flex';
+            if (forceTour) {
+                const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + window.location.hash;
+                window.history.replaceState({path: newUrl}, '', newUrl);
+            }
+        }, 1500);
+    }
+
+    const slides = tourModal.querySelectorAll('.tour-slide');
+    const dots = tourModal.querySelectorAll('.tour-dot');
+    const nextBtn = document.getElementById('tour-next-btn');
+    const skipBtn = document.getElementById('tour-skip-btn');
+    const dontShowCheckbox = document.getElementById('tour-dont-show');
+    let currentStep = 0;
+
+    function updateTour(index) {
+        slides.forEach((s, i) => {
+            s.classList.toggle('active', i === index);
+        });
+        dots.forEach((d, i) => {
+            d.classList.toggle('active', i === index);
+        });
+        
+        if (index === slides.length - 1) {
+            nextBtn.textContent = 'Let\'s Eat!';
+        } else {
+            nextBtn.textContent = 'Next';
+        }
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            if (currentStep < slides.length - 1) {
+                currentStep++;
+                updateTour(currentStep);
+            } else {
+                // Finish
+                if (dontShowCheckbox && dontShowCheckbox.checked) {
+                    localStorage.setItem(userKey, 'true');
+                }
+                tourModal.style.display = 'none';
+                if (typeof addNotification === 'function') {
+                    addNotification('You\'re Ready!', 'Start exploring the best food in town.');
+                }
+            }
+        });
+    }
+
+    if (skipBtn) {
+        skipBtn.addEventListener('click', () => {
+            if (dontShowCheckbox && dontShowCheckbox.checked) {
+                localStorage.setItem(userKey, 'true');
+            }
+            tourModal.style.display = 'none';
+        });
     }
 });
