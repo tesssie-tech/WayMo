@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome to WayMo</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍔</text></svg>">
     <link rel="stylesheet" href="Waymo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -227,6 +228,7 @@
                         <input type="password" id="login-password" placeholder="Enter your password" required style="width: 100%;">
                         <i class="fas fa-eye toggle-password" data-target="login-password"></i>
                     </div>
+                    <small id="login-error" style="color: #ff4444; display: none; margin-top: 5px;">Invalid email or password.</small>
                 </div>
                 <button type="submit" style="width: 100%; margin-top: 10px;">Login</button>
             </form>
@@ -259,6 +261,15 @@
                         <input type="password" id="signup-password" placeholder="Create a password" required style="width: 100%;">
                         <i class="fas fa-eye toggle-password" data-target="signup-password"></i>
                     </div>
+                    <small id="signup-password-error" style="color: #ff4444; display: none; margin-top: 5px;">Password must be at least 8 characters long.</small>
+                </div>
+                <div class="form-group">
+                    <label for="signup-confirm-password">Confirm Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="signup-confirm-password" placeholder="Confirm your password" required style="width: 100%;">
+                        <i class="fas fa-eye toggle-password" data-target="signup-confirm-password"></i>
+                    </div>
+                    <small id="signup-match-error" style="color: #ff4444; display: none; margin-top: 5px;">Passwords do not match.</small>
                 </div>
                 <button type="submit" style="width: 100%; margin-top: 10px;">Sign Up</button>
             </form>
@@ -398,24 +409,29 @@
         if (closeLogin && loginModal) {
             closeLogin.addEventListener('click', () => {
                 loginModal.style.display = 'none';
+                if (loginForm) loginForm.reset();
             });
         }
 
         window.addEventListener('click', (e) => {
             if (e.target === loginModal) {
                 loginModal.style.display = 'none';
+                if (loginForm) loginForm.reset();
             }
             if (document.getElementById('signup-modal') && e.target === document.getElementById('signup-modal')) {
                 document.getElementById('signup-modal').style.display = 'none';
+                if (signupForm) signupForm.reset();
             }
             if (document.getElementById('get-started-modal') && e.target === document.getElementById('get-started-modal')) {
                 document.getElementById('get-started-modal').style.display = 'none';
             }
             if (document.getElementById('forgot-password-modal') && e.target === document.getElementById('forgot-password-modal')) {
                 document.getElementById('forgot-password-modal').style.display = 'none';
+                if (forgotPasswordForm) forgotPasswordForm.reset();
             }
             if (document.getElementById('verification-modal') && e.target === document.getElementById('verification-modal')) {
                 document.getElementById('verification-modal').style.display = 'none';
+                if (verificationForm) verificationForm.reset();
             }
             if (document.getElementById('welcome-modal') && e.target === document.getElementById('welcome-modal')) {
                 // Optional: Prevent closing welcome modal by clicking outside to force button click, or allow it.
@@ -425,24 +441,58 @@
         if (loginForm) {
             loginForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                // Save User Data
                 const email = document.getElementById('login-email').value;
-                const name = email.split('@')[0]; // Use part of email as name if unknown
-                localStorage.setItem('waymo_user', JSON.stringify({ name: name, email: email }));
+                const password = document.getElementById('login-password').value;
+                const loginError = document.getElementById('login-error');
+
+                // Verify User against DB
+                const users = JSON.parse(localStorage.getItem('waymo_users_db') || '[]');
+                const user = users.find(u => u.email === email && u.password === password);
+
+                if (!user) {
+                    if (loginError) loginError.style.display = 'block';
+                    const btn = loginForm.querySelector('button');
+                    btn.classList.add('shake');
+                    setTimeout(() => btn.classList.remove('shake'), 400);
+                    return;
+                }
+
+                // Set Session
+                localStorage.setItem('waymo_user', JSON.stringify({ name: user.name, email: user.email }));
+
+                // Restore Cart
+                if (user.savedCart) {
+                    const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
+                    // Filter out items already present in savedCart to prevent duplicates
+                    const savedIds = new Set(user.savedCart.map(i => i.cartId));
+                    const uniqueCurrent = currentCart.filter(i => !savedIds.has(i.cartId));
+                    const mergedCart = [...user.savedCart, ...uniqueCurrent];
+                    localStorage.setItem('cart', JSON.stringify(mergedCart));
+                }
 
                 // Hide modal
                 if (loginModal) loginModal.style.display = 'none';
+                loginForm.reset();
 
                 // Create and inject animation overlay
                 const overlay = document.createElement('div');
                 overlay.className = 'welcome-overlay';
-                const displayName = name.charAt(0).toUpperCase() + name.slice(1);
+                const displayName = user.name.charAt(0).toUpperCase() + user.name.slice(1);
                 overlay.innerHTML = `<div class="welcome-mascot"><i class="fas fa-burger"></i></div><div class="welcome-text">Welcome Back, ${displayName}!</div>`;
                 document.body.appendChild(overlay);
 
                 setTimeout(() => {
                     window.location.href = 'index.html';
                 }, 2000);
+            });
+
+            // Clear error on input
+            const loginInputs = loginForm.querySelectorAll('input');
+            loginInputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    const loginError = document.getElementById('login-error');
+                    if (loginError) loginError.style.display = 'none';
+                });
             });
         }
 
@@ -463,6 +513,7 @@
         if (closeForgotPassword && forgotPasswordModal) {
             closeForgotPassword.addEventListener('click', () => {
                 forgotPasswordModal.style.display = 'none';
+                if (forgotPasswordForm) forgotPasswordForm.reset();
             });
         }
 
@@ -481,6 +532,7 @@
                 btn.textContent = 'Sending...';
                 setTimeout(() => {
                     forgotPasswordModal.style.display = 'none';
+                    forgotPasswordForm.reset();
                     const verifyModal = document.getElementById('verification-modal');
                     if (verifyModal) {
                         verifyModal.style.display = 'flex';
@@ -508,6 +560,7 @@
         if (closeSignup && signupModal) {
             closeSignup.addEventListener('click', () => {
                 signupModal.style.display = 'none';
+                if (signupForm) signupForm.reset();
             });
         }
 
@@ -522,9 +575,47 @@
         if (signupForm) {
             signupForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                // Save User Data
+
+                const passwordInput = document.getElementById('signup-password');
+                const confirmInput = document.getElementById('signup-confirm-password');
+                const passwordError = document.getElementById('signup-password-error');
+                const matchError = document.getElementById('signup-match-error');
+
+                // Password validation
+                if (passwordInput.value.length < 8) {
+                    if (passwordError) passwordError.style.display = 'block';
+                    passwordInput.classList.add('shake');
+                    setTimeout(() => passwordInput.classList.remove('shake'), 400);
+                    return; // Stop the submission
+                } else {
+                    if (passwordError) passwordError.style.display = 'none';
+                }
+
+                // Confirm Password validation
+                if (passwordInput.value !== confirmInput.value) {
+                    if (matchError) matchError.style.display = 'block';
+                    confirmInput.classList.add('shake');
+                    setTimeout(() => confirmInput.classList.remove('shake'), 400);
+                    return;
+                } else {
+                    if (matchError) matchError.style.display = 'none';
+                }
+
+                // Save User Data to DB
                 const name = document.getElementById('signup-name').value;
                 const email = document.getElementById('signup-email').value;
+                const password = document.getElementById('signup-password').value;
+
+                const users = JSON.parse(localStorage.getItem('waymo_users_db') || '[]');
+                if (users.some(u => u.email === email)) {
+                    alert('An account with this email already exists.');
+                    return;
+                }
+
+                users.push({ name, email, password });
+                localStorage.setItem('waymo_users_db', JSON.stringify(users));
+
+                // Set Session
                 localStorage.setItem('waymo_user', JSON.stringify({ name: name, email: email }));
 
                 const btn = signupForm.querySelector('button');
@@ -532,11 +623,30 @@
                 btn.textContent = 'Creating Account...';
                 setTimeout(() => {
                     signupModal.style.display = 'none';
+                    signupForm.reset();
                     document.getElementById('verification-modal').style.display = 'flex';
                     startResendTimer();
                     btn.textContent = originalText;
                 }, 1500);
             });
+
+            // Hide error on input
+            const passwordInput = document.getElementById('signup-password');
+            if (passwordInput) {
+                passwordInput.addEventListener('input', () => {
+                    const passwordError = document.getElementById('signup-password-error');
+                    if (passwordError && passwordError.style.display === 'block') {
+                        passwordError.style.display = 'none';
+                    }
+                });
+            }
+            const confirmInput = document.getElementById('signup-confirm-password');
+            if (confirmInput) {
+                confirmInput.addEventListener('input', () => {
+                    const matchError = document.getElementById('signup-match-error');
+                    if (matchError) matchError.style.display = 'none';
+                });
+            }
         }
 
         // Get Started Modal Logic
@@ -685,6 +795,7 @@
         if (closeVerification && verificationModal) {
             closeVerification.addEventListener('click', () => {
                 verificationModal.style.display = 'none';
+                if (verificationForm) verificationForm.reset();
                 if (resendInterval) clearInterval(resendInterval);
             });
         }
@@ -719,6 +830,7 @@
                     // Simulate validation (Correct code: 1234)
                     if (code === '1234') {
                         verificationModal.style.display = 'none';
+                        verificationForm.reset();
                         if (document.getElementById('welcome-modal')) {
                             document.getElementById('welcome-modal').style.display = 'flex';
                             startConfetti();

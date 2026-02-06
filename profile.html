@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - Waymo</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍔</text></svg>">
     <link rel="stylesheet" href="Waymo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -69,15 +70,15 @@
         </main>
 
             <nav class="bottom-nav" role="navigation" aria-label="Bottom navigation">
-            <button class="nav-item" data-view="home" aria-label="Home" onclick="location.href='index.html'">
+            <button class="nav-item" data-view="home" aria-label="Home">
                 <i class="fas fa-home icon"></i>
                 <span class="label">Home</span>
             </button>
-            <button class="nav-item" data-view="menu" aria-label="Menu" onclick="location.href='menu.html'">
+            <button class="nav-item" data-view="menu" aria-label="Menu">
                 <i class="fas fa-utensils icon"></i>
                 <span class="label">Menu</span>
             </button>
-            <button class="nav-item" data-view="cart" aria-label="Cart" onclick="location.href='cart.html'">
+            <button class="nav-item" data-view="cart" aria-label="Cart">
                 <i class="fas fa-shopping-cart icon"></i>
                 <span class="cart-badge" style="display: none;">0</span>
                 <span class="label">Cart</span>
@@ -86,7 +87,7 @@
                 <i class="fas fa-user icon"></i>
                 <span class="label">Profile</span>
             </button>
-            <button class="nav-item" data-view="contact" aria-label="Contact" onclick="location.href='contact.html'">
+            <button class="nav-item" data-view="contact" aria-label="Contact">
                 <i class="fas fa-headset icon"></i>
                 <span class="label">Contact</span>
             </button>
@@ -159,6 +160,19 @@
                         <span class="slider round"></span>
                     </label>
                 </div>
+                <div class="setting-item" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0;">
+                    <div>
+                        <h3 style="color: var(--c1); margin-bottom: 5px; font-size: 1.1em;">Password</h3>
+                        <p style="color: #888; font-size: 0.9em;">Change your password</p>
+                    </div>
+                    <button id="change-password-btn" class="btn-small" style="border-color: var(--c4); color: var(--c4);">Update</button>
+                </div>
+                <div class="setting-item" style="padding-top: 20px; margin-top: 15px; border-top: 1px solid rgba(255, 0, 107, 0.2);">
+                    <button id="delete-account-btn" class="btn-small" style="width: 100%; border-color: #ff4444; color: #ff4444; background: rgba(255, 68, 68, 0.1);">
+                        <i class="fas fa-user-slash"></i> Delete My Account
+                    </button>
+                    <p style="color: #888; font-size: 0.8em; text-align: center; margin-top: 10px;">This action is permanent and cannot be undone.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -230,6 +244,32 @@
         </div>
     </div>
 
+    <!-- Change Password Modal -->
+    <div id="change-password-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <span class="close-modal" id="close-change-password">&times;</span>
+            <div class="modal-header">
+                <h2>Change Password</h2>
+                <p>Update your security credentials</p>
+            </div>
+            <form id="change-password-form">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="current-password" style="color: var(--c3); display: block; margin-bottom: 5px;">Current Password</label>
+                    <input type="password" id="current-password" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--c4); background: transparent; color: var(--c1);">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="new-password" style="color: var(--c3); display: block; margin-bottom: 5px;">New Password</label>
+                    <input type="password" id="new-password" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--c4); background: transparent; color: var(--c1);">
+                </div>
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label for="confirm-new-password" style="color: var(--c3); display: block; margin-bottom: 5px;">Confirm New Password</label>
+                    <input type="password" id="confirm-new-password" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--c4); background: transparent; color: var(--c1);">
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; padding: 12px; border-radius: 8px; background: var(--c2); color: white; border: none; font-weight: bold; cursor: pointer;">Update Password</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Create Review Modal -->
     <div id="create-review-modal" class="modal">
         <div class="modal-content" style="max-width: 400px;">
@@ -247,21 +287,6 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Review Type</label>
-                        <div style="display: flex; gap: 20px; margin-top: 5px; margin-bottom: 15px;">
-                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--c1);">
-                                <input type="radio" name="review-type" value="written" checked> Written
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--c1);">
-                                <input type="radio" name="review-type" value="video"> Video
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group" id="video-url-group" style="display: none;">
-                        <label for="review-video-url">Video URL</label>
-                        <input type="text" id="review-video-url" placeholder="https://example.com/video.mp4" style="width: 100%;">
-                    </div>
-                    <div class="form-group">
                         <label>Rating</label>
                         <div class="star-rating-input" style="display: flex; gap: 10px; font-size: 1.5em; color: var(--c4); cursor: pointer; margin-top: 5px;">
                             <i class="far fa-star" data-value="1"></i>
@@ -271,6 +296,10 @@
                             <i class="far fa-star" data-value="5"></i>
                         </div>
                         <input type="hidden" id="review-rating" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="review-video-url">Video URL (Optional)</label>
+                        <input type="url" id="review-video-url" placeholder="https://example.com/video.mp4" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid var(--c4); background: transparent; color: var(--c1);">
                     </div>
                     <div class="form-group">
                         <label for="review-text">Review</label>

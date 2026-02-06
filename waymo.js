@@ -72,6 +72,25 @@ const sampleRestaurants = [
         let currentQty = 1;
         const toppingsList = ["Extra Cheese", "Spicy Sauce", "Bacon Bits", "Garlic Dip", "Mushrooms", "Avocado"];
 
+        // --- Loading Spinner Logic ---
+        function injectLoadingSpinner() {
+            if (!document.getElementById('loading-overlay')) {
+                const overlay = document.createElement('div');
+                overlay.id = 'loading-overlay';
+                overlay.className = 'loading-overlay';
+                overlay.innerHTML = '<div class="spinner"></div><h3 style="color: var(--c1); font-family: \'Pacifico\', cursive;">Loading...</h3>';
+                document.body.appendChild(overlay);
+            }
+        }
+
+        window.showLoadingAndNavigate = function(url) {
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+                setTimeout(() => { window.location.href = url; }, 500);
+            } else { window.location.href = url; }
+        };
+
         // --- Notification System ---
         function getNotifications() {
             return JSON.parse(localStorage.getItem('waymo_notifications') || '[]');
@@ -336,17 +355,17 @@ const sampleRestaurants = [
                     searchRestaurants(push);
                     break;
                 case 'menu':
-                    window.location.assign('./menu.html');
+                    showLoadingAndNavigate('./menu.html');
                     return;
                 case 'cart':
-                    window.location.assign('./cart.html');
+                    showLoadingAndNavigate('./cart.html');
                     return;
                 case 'profile':
                     // Redirect to separate profile page
-                    window.location.assign('./profile.html');
+                    showLoadingAndNavigate('./profile.html');
                     return;
                 case 'contact':
-                    window.location.assign('./contact.html');
+                    showLoadingAndNavigate('./contact.html');
                     return;
                 default:
                     headerTitle.textContent = 'Home';
@@ -358,6 +377,7 @@ const sampleRestaurants = [
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            injectLoadingSpinner();
             initSpecials();
             const isIndexPage = !!document.getElementById('results') && !!document.getElementById('cuisine');
             
@@ -404,18 +424,18 @@ const sampleRestaurants = [
                         if (view === 'menu') return; // already on menu
                         // navigate to cart or index with hash so they can be restored
                         if (view === 'cart') {
-                            window.location.assign('./cart.html');
+                            showLoadingAndNavigate('./cart.html');
                             return;
                         }
                         if (view === 'profile') {
-                            window.location.assign('./profile.html');
+                            showLoadingAndNavigate('./profile.html');
                             return;
                         }
                         if (view === 'contact') {
-                            window.location.assign('./contact.html');
+                            showLoadingAndNavigate('./contact.html');
                             return;
                         }
-                        window.location.assign('./index.html#' + view);
+                        showLoadingAndNavigate('./index.html#' + view);
                         return;
                     }
                     // If we're on the separate cart page, navigate appropriately
@@ -423,75 +443,92 @@ const sampleRestaurants = [
                         if (view === 'cart') return; // already on cart
                         // navigate to menu or index
                         if (view === 'menu') {
-                            window.location.assign('./menu.html');
+                            showLoadingAndNavigate('./menu.html');
                             return;
                         }
                         if (view === 'profile') {
-                            window.location.assign('./profile.html');
+                            showLoadingAndNavigate('./profile.html');
                             return;
                         }
                         if (view === 'contact') {
-                            window.location.assign('./contact.html');
+                            showLoadingAndNavigate('./contact.html');
                             return;
                         }
-                        window.location.assign('./index.html#' + view);
+                        showLoadingAndNavigate('./index.html#' + view);
                         return;
                     }
                     // If we're on the separate profile page
                     if (document.getElementById('profile-view')) {
                         if (view === 'profile') return; // already on profile
                         if (view === 'menu') {
-                            window.location.assign('./menu.html');
+                            showLoadingAndNavigate('./menu.html');
                             return;
                         }
                         if (view === 'cart') {
-                            window.location.assign('./cart.html');
+                            showLoadingAndNavigate('./cart.html');
                             return;
                         }
                         if (view === 'contact') {
-                            window.location.assign('./contact.html');
+                            showLoadingAndNavigate('./contact.html');
                             return;
                         }
-                        window.location.assign('./index.html#' + view);
+                        showLoadingAndNavigate('./index.html#' + view);
                         return;
                     }
                     // If we're on the separate contact page
                     if (document.getElementById('contact-view')) {
                         if (view === 'contact') return;
                         if (view === 'profile') {
-                             window.location.assign('./profile.html');
+                             showLoadingAndNavigate('./profile.html');
                              return;
                         }
                         if (view === 'menu') {
-                            window.location.assign('./menu.html');
+                            showLoadingAndNavigate('./menu.html');
                             return;
                         }
                         if (view === 'cart') {
-                            window.location.assign('./cart.html');
+                            showLoadingAndNavigate('./cart.html');
                             return;
                         }
-                        window.location.assign('./index.html#' + view);
+                        showLoadingAndNavigate('./index.html#' + view);
                         return;
                     }
                     // If we're on the separate orders page
                     if (document.getElementById('orders-view')) {
                         if (view === 'profile') {
-                             window.location.assign('./profile.html');
+                             showLoadingAndNavigate('./profile.html');
                              return;
                         }
                         if (view === 'menu') {
-                            window.location.assign('./menu.html');
+                            showLoadingAndNavigate('./menu.html');
                             return;
                         }
                         if (view === 'cart') {
-                            window.location.assign('./cart.html');
+                            showLoadingAndNavigate('./cart.html');
                             return;
                         }
                         if (view === 'contact') {
-                            window.location.assign('./contact.html');
+                            showLoadingAndNavigate('./contact.html');
                             return;
                         }
-                        window.location.assign('./index.html#' + view);
+                        showLoadingAndNavigate('./index.html#' + view);
+                        return;
+                    }
+                    // If we're on the separate reviews page
+                    if (document.getElementById('all-feed')) {
+                        if (view === 'menu') {
+                            showLoadingAndNavigate('./menu.html');
+                            return;
+                        }
+                        if (view === 'cart') {
+                            showLoadingAndNavigate('./cart.html');
+                            return;
+                        }
+                        if (view === 'profile') {
+                            showLoadingAndNavigate('./profile.html');
+                            return;
+                        }
+                        showLoadingAndNavigate('./index.html#' + view);
                         return;
                     }
                     // Default SPA behavior on index: switch view
@@ -800,29 +837,99 @@ document.addEventListener('DOMContentLoaded', function() {
         ];
 
         // 2. Render Trending Feed
-        const videoFeedContainer = document.querySelector('.video-feed-container');
-        if (videoFeedContainer) {
-            const userVideoReviews = JSON.parse(localStorage.getItem('waymo_video_reviews') || '[]');
-            const allVideos = [...sampleVideos, ...userVideoReviews];
-            
-            // Filter: Only show if likes > 50 (Trending Logic)
-            const trendingVideos = allVideos.filter(v => (v.likes || 0) > 50);
+        const trendingFeed = document.getElementById('trending-feed');
+        const allFeed = document.getElementById('all-feed');
 
-            if (trendingVideos.length === 0) {
-                videoFeedContainer.innerHTML = '<p style="color:#888; padding:20px;">No trending reviews right now.</p>';
+        window.getFeedItems = function() {
+            const userVideoReviews = JSON.parse(localStorage.getItem('waymo_video_reviews') || '[]');
+            const rawUserReviews = JSON.parse(localStorage.getItem('waymo_user_reviews') || '[]');
+            const userObj = JSON.parse(localStorage.getItem('waymo_user') || '{}');
+            const currentUserName = userObj.name ? '@' + userObj.name : '@You';
+
+            const userWrittenReviews = rawUserReviews
+                .filter(r => r.type === 'written')
+                .map(r => ({
+                    type: 'written',
+                    text: r.text,
+                    restaurant: r.restaurant,
+                    user: currentUserName,
+                    rating: r.rating,
+                    likes: r.likes || 0,
+                    id: r.id,
+                    poster: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=800&auto=format&fit=crop'
+                }));
+            
+            const samples = sampleVideos.map(v => ({...v, type: 'video'}));
+            const userVideos = userVideoReviews.map(v => ({...v, type: 'video'}));
+            return [...samples, ...userVideos, ...userWrittenReviews];
+        }
+
+        const allVideos = window.getFeedItems();
+
+        window.renderVideos = function(videos, container) {
+            if (videos.length === 0) {
+                container.innerHTML = '<p style="color:#888; padding:20px;">No reviews available.</p>';
             } else {
-                videoFeedContainer.innerHTML = trendingVideos.map(v => `
+                container.innerHTML = videos.map(v => {
+                    if (v.type === 'written') {
+                        return `
+                            <div class="video-card" style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('${v.poster}'); background-size: cover; background-position: center;">
+                                <div class="video-wrapper" style="display:flex; align-items:center; justify-content:center; padding:30px; text-align:center;">
+                                    <div>
+                                        <h2 style="color:var(--c2); font-family:'Pacifico', cursive; margin-bottom:15px;">${v.restaurant}</h2>
+                                        <div style="font-size:1.5em; margin-bottom:20px;">
+                                            ${Array(5).fill(0).map((_, i) => `<i class="${i < v.rating ? 'fas' : 'far'} fa-star" style="color: gold;"></i>`).join('')}
+                                        </div>
+                                        <p style="font-size:1.2em; line-height:1.5; color:#fff; font-style:italic;">"${v.text}"</p>
+                                    </div>
+                                    
+                                    <div class="video-controls-overlay">
+                                        <div class="right-actions">
+                                            <div class="action-item">
+                                                <div class="like-btn" style="display: flex;"><i class="fas fa-heart"></i></div>
+                                                <div class="like-count" style="display: block;">${v.likes}</div>
+                                            </div>
+                                            <div class="action-item">
+                                                <div class="share-btn" style="display: flex;"><i class="fas fa-share-alt"></i></div>
+                                                <div class="share-label" style="font-size:0.7em; text-shadow:0 1px 2px black;">Share</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="video-info">
+                                    <span><i class="fas fa-user-circle"></i> ${v.user}</span>
+                                    <span class="rating">Written Review</span>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    return `
                     <div class="video-card" data-video="${v.url}">
                         <div class="video-wrapper">
                             <img src="${v.poster || 'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?q=80&w=800&auto=format&fit=crop'}" class="video-poster">
                             <div class="play-icon"><i class="fas fa-play"></i></div>
-                            <div class="mute-btn" style="display: none;"><i class="fas fa-volume-up"></i></div>
-                            <div class="share-btn" style="display: none;"><i class="fas fa-share-alt"></i></div>
-                            <div class="like-btn" style="display: none;"><i class="fas fa-heart"></i></div>
-                            <div class="like-count" style="display: none;">${v.likes}</div>
-                            <div class="comment-btn" style="display: none;"><i class="fas fa-comment"></i></div>
-                            <div class="comment-count" style="display: none;">0</div>
-                            <div class="fullscreen-btn" style="display: none;"><i class="fas fa-expand"></i></div>
+                            
+                            <div class="video-controls-overlay">
+                                <div class="top-controls">
+                                    <div class="mute-btn" style="display: none;"><i class="fas fa-volume-up"></i></div>
+                                    <div class="fullscreen-btn" style="display: none;"><i class="fas fa-expand"></i></div>
+                                </div>
+                                <div class="right-actions">
+                                    <div class="action-item">
+                                        <div class="like-btn" style="display: none;"><i class="fas fa-heart"></i></div>
+                                        <div class="like-count" style="display: none;">${v.likes}</div>
+                                    </div>
+                                    <div class="action-item">
+                                        <div class="comment-btn" style="display: none;"><i class="fas fa-comment"></i></div>
+                                        <div class="comment-count" style="display: none;">0</div>
+                                    </div>
+                                    <div class="action-item">
+                                        <div class="share-btn" style="display: none;"><i class="fas fa-share-alt"></i></div>
+                                        <div class="share-label" style="font-size:0.7em; text-shadow:0 1px 2px black;">Share</div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="video-progress-container">
                                 <div class="video-progress-bar"></div>
                             </div>
@@ -832,36 +939,48 @@ document.addEventListener('DOMContentLoaded', function() {
                             <span class="rating"><i class="fas fa-star" style="color: gold;"></i> ${v.rating}</span>
                         </div>
                     </div>
-                `).join('');
+                `;}).join('');
             }
+        }
+
+        if (trendingFeed) {
+            // Filter: Only show if likes > 50 (Trending Logic)
+            const trendingVideos = allVideos.filter(v => (v.likes || 0) > 50);
+            renderVideos(trendingVideos, trendingFeed);
+        }
+
+        if (allFeed) {
+            renderVideos(allVideos, allFeed);
         }
 
         // 3. Select newly rendered cards
-        const videoCards = document.querySelectorAll('.video-card');
-        
-        // Initialize comment counts from storage
-        videoCards.forEach(card => {
-            const url = card.dataset.video;
-            const countEl = card.querySelector('.comment-count');
-            if (url && countEl && videoComments[url]) {
-                countEl.textContent = videoComments[url].length;
-            }
-        });
-
-        const videoObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting && entry.target.tagName === 'VIDEO') {
-                    entry.target.pause();
+        window.attachVideoCardListeners = function() {
+            const videoCards = document.querySelectorAll('.video-card');
+            
+            // Initialize comment counts from storage
+            videoCards.forEach(card => {
+                const url = card.dataset.video;
+                const countEl = card.querySelector('.comment-count');
+                if (url && countEl && videoComments[url]) {
+                    countEl.textContent = videoComments[url].length;
                 }
             });
-        }, { threshold: 0.5 });
 
-        function updateMuteIcon(btn, isMuted) {
-            btn.innerHTML = isMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
-        }
+            const videoObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting && entry.target.tagName === 'VIDEO') {
+                        entry.target.pause();
+                    }
+                });
+            }, { threshold: 0.5 });
 
-        videoCards.forEach(card => {
-            card.addEventListener('click', function(e) {
+            function updateMuteIcon(btn, isMuted) {
+                btn.innerHTML = isMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+            }
+
+            videoCards.forEach(card => {
+                let lastClickTime = 0;
+                card.addEventListener('click', function(e) {
                 // Ignore if clicking the mute button directly
                 if (e.target.closest('.mute-btn')) return;
                 if (e.target.closest('.fullscreen-btn')) return;
@@ -869,6 +988,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (e.target.closest('.like-btn')) return;
                 if (e.target.closest('.comment-btn')) return;
                 if (e.target.closest('.video-progress-container')) return;
+
+                // Double Tap Logic
+                const currentTime = new Date().getTime();
+                const timeDiff = currentTime - lastClickTime;
+                
+                if (timeDiff < 300 && timeDiff > 0) {
+                    const likeBtn = this.querySelector('.like-btn');
+                    const wrapper = this.querySelector('.video-wrapper');
+                    
+                    // Trigger Like if not already liked
+                    if (likeBtn && !likeBtn.classList.contains('liked')) {
+                        likeBtn.click();
+                    }
+
+                    // Show Mascot Wink Animation
+                    if (wrapper) {
+                        const overlay = document.createElement('div');
+                        overlay.className = 'mascot-wink-overlay';
+                        overlay.innerHTML = '<i class="fas fa-face-laugh-wink"></i>';
+                        wrapper.appendChild(overlay);
+                        setTimeout(() => overlay.remove(), 1000);
+                    }
+                    lastClickTime = 0;
+                } else {
+                    lastClickTime = currentTime;
+                }
 
                 const wrapper = this.querySelector('.video-wrapper');
                 const videoUrl = this.dataset.video;
@@ -1116,7 +1261,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
             }
-        });
+            });
+        }
+        
+        window.attachVideoCardListeners();
 
 });
 
@@ -1202,6 +1350,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
 });
 
 // --- Cart page logic (runs only when cart elements exist) ---
@@ -1276,27 +1425,193 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateCartSummary(cart) {
         const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         const tax = subtotal * 0.08;
-        const total = subtotal + tax;
+        
+        // Discount Logic
+        let discountRate = parseFloat(localStorage.getItem('waymo_discount_rate') || '0');
+        let discountAmount = subtotal * discountRate;
+        
+        const total = subtotal + tax - discountAmount;
 
         document.getElementById('subtotal').textContent = `₦${subtotal.toFixed(2)}`;
         document.getElementById('tax').textContent = `₦${tax.toFixed(2)}`;
+        
+        const discountRow = document.getElementById('discount-row');
+        const discountEl = document.getElementById('discount-amount');
+        if (discountRow && discountEl) {
+            if (discountRate > 0) {
+                discountRow.style.display = 'flex';
+                discountEl.textContent = `-₦${discountAmount.toFixed(2)}`;
+            } else {
+                discountRow.style.display = 'none';
+            }
+        }
+        
         document.getElementById('total').textContent = `₦${total.toFixed(2)}`;
     }
 
     loadCart();
+
+    // Apply Discount Logic
+    const applyDiscountBtn = document.getElementById('apply-discount-btn');
+    if (applyDiscountBtn) {
+        applyDiscountBtn.addEventListener('click', () => {
+            const codeInput = document.getElementById('discount-code');
+            const code = codeInput.value.trim().toUpperCase();
+            let rate = 0;
+
+            if (code === 'SAVE10') rate = 0.10;
+            else if (code === 'WAYMO20') rate = 0.20;
+            else if (code === 'FREEMEAL') rate = 1.00;
+
+            if (rate > 0) {
+                localStorage.setItem('waymo_discount_rate', rate);
+                loadCart(); // Recalculate totals
+                if (typeof addNotification === 'function') addNotification('Discount Applied', `${rate * 100}% off applied!`);
+                codeInput.value = '';
+            } else {
+                alert('Invalid promo code');
+                localStorage.removeItem('waymo_discount_rate');
+                loadCart();
+            }
+        });
+    }
 
     // --- Checkout Flow Logic ---
     const locationModal = document.getElementById('location-modal');
     const paymentModal = document.getElementById('payment-modal');
     const confirmationModal = document.getElementById('confirmation-modal');
 
+    // --- Tip Logic Variables ---
+    let currentTipAmount = 0;
+    let orderBaseTotal = 0;
+
+    function updatePaymentModalTotals() {
+        const tipDisplay = document.getElementById('payment-tip-amount');
+        const totalDisplay = document.getElementById('payment-final-total');
+        const confirmBtn = document.getElementById('confirm-payment-btn');
+        const splitCountInput = document.getElementById('split-count');
+        const splitPerPersonDisplay = document.getElementById('split-per-person');
+        
+        const finalTotal = orderBaseTotal + currentTipAmount;
+        
+        if (tipDisplay) tipDisplay.textContent = `₦${currentTipAmount.toFixed(2)}`;
+        if (totalDisplay) totalDisplay.textContent = `₦${finalTotal.toFixed(2)}`;
+        if (confirmBtn) confirmBtn.textContent = `Pay ₦${finalTotal.toFixed(2)}`;
+
+        if (splitCountInput && splitPerPersonDisplay) {
+            let count = parseInt(splitCountInput.value) || 1;
+            if (count < 1) count = 1;
+            splitPerPersonDisplay.textContent = `₦${(finalTotal / count).toFixed(2)}`;
+        }
+    }
+
+    // Tip Button Listeners
+    document.querySelectorAll('.tip-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Toggle active state
+            document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('custom-tip').value = ''; // Clear custom
+            this.classList.add('active');
+
+            const percent = parseFloat(this.dataset.percent);
+            currentTipAmount = orderBaseTotal * percent;
+            updatePaymentModalTotals();
+        });
+    });
+
+    // Custom Tip Listener
+    const customTipInput = document.getElementById('custom-tip');
+    if (customTipInput) {
+        customTipInput.addEventListener('input', function() {
+            document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('active'));
+            let val = parseFloat(this.value);
+            if (isNaN(val) || val < 0) val = 0;
+            currentTipAmount = val;
+            updatePaymentModalTotals();
+        });
+    }
+
+    // Split Bill Listener
+    const splitInput = document.getElementById('split-count');
+    if (splitInput) {
+        splitInput.addEventListener('input', updatePaymentModalTotals);
+    }
+
+    // Delivery Time Toggle Logic
+    const nowBtn = document.getElementById('delivery-now-btn');
+    const scheduleBtn = document.getElementById('delivery-schedule-btn');
+    const scheduleContainer = document.getElementById('schedule-time-container');
+
+    if (nowBtn && scheduleBtn && scheduleContainer) {
+        nowBtn.addEventListener('click', () => {
+            nowBtn.classList.add('active');
+            scheduleBtn.classList.remove('active');
+            scheduleContainer.style.display = 'none';
+        });
+
+        scheduleBtn.addEventListener('click', () => {
+            scheduleBtn.classList.add('active');
+            nowBtn.classList.remove('active');
+            scheduleContainer.style.display = 'block';
+        });
+    }
+
     checkoutBtn.addEventListener('click', function() {
+        // Guest Mode Restriction
+        const user = JSON.parse(localStorage.getItem('waymo_user') || '{}');
+        if (!user.email) {
+            if (confirm('You are currently in Guest Mode. Please sign up or log in to complete your order.')) {
+                window.location.href = 'landing.html';
+            }
+            return;
+        }
+
         // Step 1: Open Location Modal
         if (locationModal) {
             locationModal.style.display = 'flex';
+            
+            // Render Saved Addresses for Checkout
+            const savedAddressesContainer = document.getElementById('checkout-saved-addresses');
+            if (savedAddressesContainer) {
+                const addresses = JSON.parse(localStorage.getItem('waymo_addresses') || '[]');
+                if (addresses.length > 0) {
+                    savedAddressesContainer.style.display = 'flex';
+                    savedAddressesContainer.innerHTML = addresses.map(addr => {
+                        let icon = 'fa-map-marker-alt';
+                        if (addr.label.toLowerCase().includes('home')) icon = 'fa-home';
+                        else if (addr.label.toLowerCase().includes('work')) icon = 'fa-briefcase';
+                        return `<button class="btn-small address-chip" data-address="${addr.address}" style="white-space: nowrap; flex-shrink: 0;"><i class="fas ${icon}"></i> ${addr.label}</button>`;
+                    }).join('');
+
+                    savedAddressesContainer.querySelectorAll('.address-chip').forEach(chip => {
+                        chip.addEventListener('click', () => {
+                            document.getElementById('delivery-address').value = chip.dataset.address;
+                            savedAddressesContainer.querySelectorAll('.address-chip').forEach(c => c.classList.remove('active'));
+                            chip.classList.add('active');
+                        });
+                    });
+                } else {
+                    savedAddressesContainer.style.display = 'none';
+                }
+            }
+            
             history.pushState({modalOpen: true}, '');
         }
     });
+
+    // Clear Cart Logic
+    const clearCartBtn = document.getElementById('clear-cart-btn');
+    if (clearCartBtn) {
+        clearCartBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear your cart?')) {
+                localStorage.removeItem('cart');
+                localStorage.removeItem('waymo_discount_rate');
+                loadCart();
+                updateCartBadge();
+                if (typeof addNotification === 'function') addNotification('Cart Cleared', 'All items have been removed.');
+            }
+        });
+    }
 
     // Step 2: Location -> Payment
     const toPaymentBtn = document.getElementById('to-payment-btn');
@@ -1307,9 +1622,37 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Please enter a delivery address');
                 return;
             }
+
+            // Delivery Time Validation
+            let deliveryTime = 'Now';
+            if (scheduleBtn && scheduleBtn.classList.contains('active')) {
+                const timeInput = document.getElementById('delivery-time');
+                if (!timeInput.value) {
+                    alert('Please select a delivery time');
+                    return;
+                }
+                deliveryTime = new Date(timeInput.value).toLocaleString();
+            }
+            localStorage.setItem('waymo_delivery_time', deliveryTime);
+
             locationModal.style.display = 'none';
             paymentModal.style.display = 'flex';
             history.pushState({modalOpen: true}, '');
+
+            // Initialize Totals for Payment Modal
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const tax = subtotal * 0.08;
+            const discountRate = parseFloat(localStorage.getItem('waymo_discount_rate') || '0');
+            const discount = subtotal * discountRate;
+            
+            orderBaseTotal = subtotal + tax - discount;
+            currentTipAmount = 0; // Reset tip
+            
+            document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('active'));
+            if (customTipInput) customTipInput.value = '';
+            if (splitInput) splitInput.value = '1'; // Reset split count
+            updatePaymentModalTotals();
         });
     }
 
@@ -1317,6 +1660,40 @@ document.addEventListener('DOMContentLoaded', function() {
     const confirmPaymentBtn = document.getElementById('confirm-payment-btn');
     if (confirmPaymentBtn) {
         confirmPaymentBtn.addEventListener('click', function() {
+            // Validate Credit Card (Luhn Algorithm)
+            const activeMethodBtn = paymentModal ? paymentModal.querySelector('.btn-small.active') : null;
+            
+            if (activeMethodBtn && activeMethodBtn.textContent.trim() === 'Card') {
+                const cardInput = document.getElementById('card-number');
+                const rawNum = cardInput.value.replace(/\D/g, '');
+                
+                if (rawNum.length < 13 || rawNum.length > 19) {
+                    alert('Please enter a valid card number.');
+                    if(cardInput) cardInput.focus();
+                    return;
+                }
+
+                let sum = 0;
+                let shouldDouble = false;
+                for (let i = rawNum.length - 1; i >= 0; i--) {
+                    let digit = parseInt(rawNum.charAt(i));
+                    if (shouldDouble) {
+                        if ((digit *= 2) > 9) digit -= 9;
+                    }
+                    sum += digit;
+                    shouldDouble = !shouldDouble;
+                }
+
+                if (sum % 10 !== 0) {
+                    alert('Invalid credit card number.');
+                    if(cardInput) {
+                        cardInput.classList.add('shake');
+                        setTimeout(() => cardInput.classList.remove('shake'), 400);
+                    }
+                    return;
+                }
+            }
+
             // Simulate processing
             const btn = this;
             const originalText = btn.textContent;
@@ -1331,14 +1708,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Save Order to History
                 const cart = JSON.parse(localStorage.getItem('cart') || '[]');
                 if (cart.length > 0) {
-                    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                    const total = subtotal * 1.08; // Including 8% tax
+                    // Total is already calculated in orderBaseTotal + currentTipAmount
+                    const finalTotal = orderBaseTotal + currentTipAmount;
+                    
                     const orders = JSON.parse(localStorage.getItem('waymo_orders') || '[]');
                     const newOrder = {
                         id: '#' + Math.floor(100000 + Math.random() * 900000),
                         date: new Date().toLocaleDateString(),
                         items: cart,
-                        total: total
+                        total: finalTotal,
+                        tip: currentTipAmount, // Save tip info
+                        deliveryTime: localStorage.getItem('waymo_delivery_time') || 'Now'
                     };
                     orders.unshift(newOrder);
                     localStorage.setItem('waymo_orders', JSON.stringify(orders));
@@ -1346,6 +1726,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Clear cart and update UI
                 localStorage.removeItem('cart');
+                localStorage.removeItem('waymo_discount_rate');
+                localStorage.removeItem('waymo_delivery_time');
                 loadCart();
                 updateCartBadge();
 
@@ -1471,9 +1853,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (document.getElementById('notif-list')) {
             // Only add if we haven't spammed them recently (simple check)
             const notifs = getNotifications();
-            const hasPromo = notifs.some(n => n.title === 'Flash Sale!');
-            if (!hasPromo) {
-                addNotification('Flash Sale!', 'Get 20% off all desserts for the next hour.');
+            const hasWelcome = notifs.some(n => n.title === 'Welcome to WayMo!');
+            if (!hasWelcome) {
+                const user = JSON.parse(localStorage.getItem('waymo_user') || '{}');
+                const name = user.name ? ' ' + user.name.charAt(0).toUpperCase() + user.name.slice(1) : '';
+                addNotification('Welcome to WayMo!', `Happy to see you${name}! Ready to order some delicious food?`);
             }
         }
     }, 5000);
@@ -1704,6 +2088,18 @@ document.addEventListener('DOMContentLoaded', function() {
             logoutBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 
+                // Save Cart to DB
+                const currentUser = JSON.parse(localStorage.getItem('waymo_user'));
+                if (currentUser && currentUser.email) {
+                    const users = JSON.parse(localStorage.getItem('waymo_users_db') || '[]');
+                    const userIndex = users.findIndex(u => u.email === currentUser.email);
+                    if (userIndex !== -1) {
+                        const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
+                        users[userIndex].savedCart = currentCart;
+                        localStorage.setItem('waymo_users_db', JSON.stringify(users));
+                    }
+                }
+
                 // Create and inject animation overlay
                 const overlay = document.createElement('div');
                 overlay.className = 'logout-overlay';
@@ -1712,6 +2108,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 setTimeout(() => {
                     localStorage.removeItem('waymo_user');
+                    localStorage.removeItem('cart'); // Clear the shopping cart session
+                    // Clear other personal data to ensure privacy on shared devices
+                    localStorage.removeItem('waymo_notifications');
+                    localStorage.removeItem('waymo_orders');
+                    localStorage.removeItem('waymo_user_reviews');
+                    localStorage.removeItem('waymo_addresses');
+                    localStorage.removeItem('waymo_payment_pref');
+                    localStorage.removeItem('waymo_settings');
+                    localStorage.removeItem('waymo_discount_rate');
+                    localStorage.removeItem('waymo_delivery_time');
+                    localStorage.removeItem('waymo_default_address');
+                    // The user database (waymo_users_db) is preserved
                     window.location.href = 'landing.html';
                 }, 2000);
             });
@@ -1911,6 +2319,121 @@ document.addEventListener('DOMContentLoaded', function() {
         const closeSettings = document.getElementById('close-settings');
         const notifToggle = document.getElementById('notif-toggle');
         const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const deleteAccountBtn = document.getElementById('delete-account-btn');
+
+        if (deleteAccountBtn) {
+            deleteAccountBtn.addEventListener('click', () => {
+                if (confirm('Are you sure you want to delete your account? This action is permanent and cannot be undone.')) {
+                    const currentUser = JSON.parse(localStorage.getItem('waymo_user'));
+                    if (!currentUser || !currentUser.email) {
+                        alert('Cannot delete guest account or user not found.');
+                        return;
+                    }
+
+                    // Remove from user database
+                    let users = JSON.parse(localStorage.getItem('waymo_users_db') || '[]');
+                    users = users.filter(u => u.email !== currentUser.email);
+                    localStorage.setItem('waymo_users_db', JSON.stringify(users));
+
+                    // Show deletion animation
+                    const overlay = document.createElement('div');
+                    overlay.className = 'logout-overlay';
+                    overlay.innerHTML = `<div class="logout-mascot"><i class="fas fa-heart-broken"></i></div><div class="logout-text">Account Deleted</div>`;
+                    document.body.appendChild(overlay);
+
+                    // Clear all session data and redirect
+                    setTimeout(() => {
+                        localStorage.removeItem('waymo_user');
+                        localStorage.removeItem('cart');
+                        localStorage.removeItem(`waymo_tour_seen_${currentUser.email}`);
+                        const rememberedEmail = localStorage.getItem('waymo_remember_email');
+                        if (rememberedEmail && rememberedEmail === currentUser.email) {
+                            localStorage.removeItem('waymo_remember_email');
+                        }
+                        window.location.href = 'landing.html';
+                    }, 2500);
+                }
+            });
+        }
+
+        // Change Password Logic
+        const changePasswordBtn = document.getElementById('change-password-btn');
+        const changePasswordModal = document.getElementById('change-password-modal');
+        const closeChangePassword = document.getElementById('close-change-password');
+        const changePasswordForm = document.getElementById('change-password-form');
+
+        if (changePasswordBtn) {
+            changePasswordBtn.addEventListener('click', () => {
+                if (settingsModal) settingsModal.style.display = 'none';
+                if (changePasswordModal) changePasswordModal.style.display = 'flex';
+            });
+        }
+
+        if (closeChangePassword && changePasswordModal) {
+            closeChangePassword.addEventListener('click', () => {
+                changePasswordModal.style.display = 'none';
+                if (changePasswordForm) changePasswordForm.reset();
+            });
+        }
+
+        if (changePasswordForm) {
+            changePasswordForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const currentPwd = document.getElementById('current-password').value;
+                const newPwd = document.getElementById('new-password').value;
+                const confirmPwd = document.getElementById('confirm-new-password').value;
+                
+                const currentUser = JSON.parse(localStorage.getItem('waymo_user'));
+                if (!currentUser || !currentUser.email) {
+                    alert('You must be logged in to change your password.');
+                    return;
+                }
+
+                const users = JSON.parse(localStorage.getItem('waymo_users_db') || '[]');
+                const userIndex = users.findIndex(u => u.email === currentUser.email);
+
+                if (userIndex === -1) {
+                    alert('User account not found.');
+                    return;
+                }
+
+                if (users[userIndex].password !== currentPwd) {
+                    alert('Incorrect current password.');
+                    return;
+                }
+
+                if (newPwd.length < 8) {
+                    alert('New password must be at least 8 characters long.');
+                    return;
+                }
+
+                if (newPwd !== confirmPwd) {
+                    alert('New passwords do not match.');
+                    return;
+                }
+
+                // Update password
+                users[userIndex].password = newPwd;
+                localStorage.setItem('waymo_users_db', JSON.stringify(users));
+
+                changePasswordModal.style.display = 'none';
+                changePasswordForm.reset();
+                
+                if (typeof addNotification === 'function') {
+                    addNotification('Success', 'Your password has been updated.');
+                } else {
+                    alert('Password updated successfully.');
+                }
+            });
+        }
+
+        window.addEventListener('click', (e) => {
+            if (changePasswordModal && e.target === changePasswordModal) {
+                changePasswordModal.style.display = 'none';
+                if (changePasswordForm) changePasswordForm.reset();
+            }
+        });
 
         if (settingsLink && settingsModal) {
             settingsLink.addEventListener('click', (e) => {
@@ -1961,19 +2484,65 @@ document.addEventListener('DOMContentLoaded', function() {
         const closeAddressModal = document.getElementById('close-saved-addresses');
         const saveAddressBtn = document.getElementById('save-address-btn');
         const addressOptions = document.querySelectorAll('.address-option');
+        const addressOptionsContainer = document.querySelector('.address-options');
+
+        function renderAddressList() {
+            if (!addressOptionsContainer) return;
+            const addresses = JSON.parse(localStorage.getItem('waymo_addresses') || '[]');
+            const defaultAddr = localStorage.getItem('waymo_default_address');
+            
+            addressOptionsContainer.innerHTML = '';
+            
+            if (addresses.length === 0) {
+                addressOptionsContainer.innerHTML = '<p style="color:#888; text-align:center; padding:10px;">No saved addresses.</p>';
+                return;
+            }
+
+            addresses.forEach(addr => {
+                let iconClass = 'fa-map-marker-alt';
+                if (addr.label.toLowerCase().includes('home')) iconClass = 'fa-home';
+                if (addr.label.toLowerCase().includes('work') || addr.label.toLowerCase().includes('office')) iconClass = 'fa-briefcase';
+                
+                const div = document.createElement('div');
+                div.className = 'address-option';
+                if (addr.type === defaultAddr) div.classList.add('selected');
+                div.dataset.type = addr.type;
+                div.innerHTML = `
+                    <div class="address-icon"><i class="fas ${iconClass}"></i></div>
+                    <div class="address-details">
+                        <strong>${addr.label}</strong>
+                        <span>${addr.address}</span>
+                    </div>
+                    <i class="fas fa-check check-icon"></i>
+                    <i class="fas fa-trash delete-addr-btn" style="margin-left:auto; color:#ff4444; opacity:0.7; cursor:pointer;" title="Delete"></i>
+                `;
+                
+                div.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('delete-addr-btn')) return;
+                    document.querySelectorAll('.address-option').forEach(o => o.classList.remove('selected'));
+                    div.classList.add('selected');
+                });
+
+                const delBtn = div.querySelector('.delete-addr-btn');
+                if (delBtn) {
+                    delBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if(confirm('Delete this address?')) {
+                            const newAddresses = addresses.filter(a => a.id !== addr.id);
+                            localStorage.setItem('waymo_addresses', JSON.stringify(newAddresses));
+                            renderAddressList();
+                        }
+                    });
+                }
+
+                addressOptionsContainer.appendChild(div);
+            });
+        }
 
         if (addressLink && addressModal) {
             addressLink.addEventListener('click', (e) => {
                 e.preventDefault();
-                // Load saved preference
-                const savedAddress = localStorage.getItem('waymo_default_address') || 'home';
-                addressOptions.forEach(opt => {
-                    if (opt.dataset.type === savedAddress) {
-                        opt.classList.add('selected');
-                    } else {
-                        opt.classList.remove('selected');
-                    }
-                });
+                renderAddressList();
                 addressModal.style.display = 'flex';
             });
 
@@ -1982,13 +2551,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     addressModal.style.display = 'none';
                 });
             }
-
-            addressOptions.forEach(opt => {
-                opt.addEventListener('click', () => {
-                    addressOptions.forEach(o => o.classList.remove('selected'));
-                    opt.classList.add('selected');
-                });
-            });
 
             if (saveAddressBtn) {
                 saveAddressBtn.addEventListener('click', () => {
@@ -2086,34 +2648,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     if (!label || !line1) return;
 
-                    const addressOptionsContainer = document.querySelector('.address-options');
-                    if (addressOptionsContainer) {
-                        let iconClass = 'fa-map-pin';
-                        if (label.toLowerCase().includes('home')) iconClass = 'fa-home';
-                        if (label.toLowerCase().includes('work') || label.toLowerCase().includes('office')) iconClass = 'fa-briefcase';
-
-                        const newAddressEl = document.createElement('div');
-                        newAddressEl.className = 'address-option';
-                        newAddressEl.dataset.type = label.toLowerCase().replace(/\s/g, '');
-                        newAddressEl.innerHTML = `
-                            <div class="address-icon"><i class="fas ${iconClass}"></i></div>
-                            <div class="address-details">
-                                <strong>${label}</strong>
-                                <span>${line1}</span>
-                            </div>
-                            <i class="fas fa-check check-icon"></i>
-                        `;
-                        
-                        newAddressEl.addEventListener('click', () => {
-                            document.querySelectorAll('.address-option').forEach(o => o.classList.remove('selected'));
-                            newAddressEl.classList.add('selected');
-                        });
-
-                        addressOptionsContainer.appendChild(newAddressEl);
-                    }
+                    const addresses = JSON.parse(localStorage.getItem('waymo_addresses') || '[]');
+                    addresses.push({
+                        id: Date.now(),
+                        label: label,
+                        address: line1,
+                        type: label.toLowerCase().replace(/\s/g, '')
+                    });
+                    localStorage.setItem('waymo_addresses', JSON.stringify(addresses));
 
                     addAddressModal.style.display = 'none';
-                    if (addressModal) addressModal.style.display = 'flex';
+                    if (addressModal) {
+                        renderAddressList();
+                        addressModal.style.display = 'flex';
+                    }
                     addAddressForm.reset();
                 });
             }
@@ -2247,23 +2795,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             }
                         });
 
+                        document.getElementById('review-video-url').value = review.videoUrl || '';
                         document.getElementById('review-text').value = review.text;
-
-                        const radios = document.querySelectorAll('input[name="review-type"]');
-                        const videoGroup = document.getElementById('video-url-group');
-                        const videoInput = document.getElementById('review-video-url');
-                        
-                        if (review.type === 'video') {
-                            radios.forEach(r => { if(r.value === 'video') r.checked = true; });
-                            videoGroup.style.display = 'block';
-                            videoInput.value = review.videoUrl || '';
-                            videoInput.required = true;
-                        } else {
-                            radios.forEach(r => { if(r.value === 'written') r.checked = true; });
-                            videoGroup.style.display = 'none';
-                            videoInput.value = '';
-                            videoInput.required = false;
-                        }
 
                         reviewForm.dataset.editingId = review.id;
                         reviewForm.querySelector('button[type="submit"]').textContent = 'Update Review';
@@ -2328,23 +2861,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const reviewRestaurantSelect = document.getElementById('review-restaurant');
         const starContainer = document.querySelector('.star-rating-input');
         const ratingInput = document.getElementById('review-rating');
-        const reviewTypeRadios = document.querySelectorAll('input[name="review-type"]');
-        const videoUrlGroup = document.getElementById('video-url-group');
-
-        // Toggle Video URL Input
-        if (reviewTypeRadios.length > 0 && videoUrlGroup) {
-            reviewTypeRadios.forEach(radio => {
-                radio.addEventListener('change', (e) => {
-                    if (e.target.value === 'video') {
-                        videoUrlGroup.style.display = 'block';
-                        document.getElementById('review-video-url').required = true;
-                    } else {
-                        videoUrlGroup.style.display = 'none';
-                        document.getElementById('review-video-url').required = false;
-                    }
-                });
-            });
-        }
 
         if (reviewLink && reviewModal) {
             reviewLink.addEventListener('click', (e) => {
@@ -2361,9 +2877,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         s.classList.add('far');
                         s.style.color = 'var(--c4)';
                     });
-                    if (videoUrlGroup) videoUrlGroup.style.display = 'none';
-                    const radios = document.querySelectorAll('input[name="review-type"]');
-                    if (radios.length > 0) radios[0].checked = true;
                 }
                 
                 // Populate restaurants from sampleRestaurants
@@ -2425,8 +2938,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
 
                     const editingId = reviewForm.dataset.editingId ? Number(reviewForm.dataset.editingId) : null;
-                    const isVideo = document.querySelector('input[name="review-type"]:checked').value === 'video';
-                    const videoUrl = isVideo ? document.getElementById('review-video-url').value : null;
                     const reviews = JSON.parse(localStorage.getItem('waymo_user_reviews') || '[]');
                     let likes = 0;
 
@@ -2434,6 +2945,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         const existing = reviews.find(r => r.id === editingId);
                         if (existing) likes = existing.likes || 0;
                     }
+
+                    const videoUrl = document.getElementById('review-video-url').value.trim();
+                    const isVideo = !!videoUrl;
 
                     const newReview = {
                         id: editingId || Date.now(),
@@ -2454,31 +2968,38 @@ document.addEventListener('DOMContentLoaded', function() {
                             let videoReviews = JSON.parse(localStorage.getItem('waymo_video_reviews') || '[]');
                             if (oldReview.type === 'video' && oldReview.videoUrl) {
                                 videoReviews = videoReviews.filter(v => v.url !== oldReview.videoUrl);
+                                localStorage.setItem('waymo_video_reviews', JSON.stringify(videoReviews));
                             }
-                            if (isVideo) {
-                                const userObj = JSON.parse(localStorage.getItem('waymo_user') || '{}');
-                                const videoEntry = { url: videoUrl, user: userObj.name ? '@' + userObj.name : '@You', rating: rating, likes: likes, poster: '' };
-                                videoReviews.push(videoEntry);
-                            }
-                            localStorage.setItem('waymo_video_reviews', JSON.stringify(videoReviews));
                             
                             reviews[index] = newReview;
                             if (typeof addNotification === 'function') addNotification('Review Updated', 'Your review has been updated.');
                         }
                     } else {
                         reviews.unshift(newReview);
-                        // If it's a video review, save to global video reviews as well
-                        if (isVideo) {
-                            const videoReviews = JSON.parse(localStorage.getItem('waymo_video_reviews') || '[]');
-                            const userObj = JSON.parse(localStorage.getItem('waymo_user') || '{}');
-                            const videoEntry = { url: videoUrl, user: userObj.name ? '@' + userObj.name : '@You', rating: rating, likes: 0, poster: '' };
-                            videoReviews.push(videoEntry);
-                            localStorage.setItem('waymo_video_reviews', JSON.stringify(videoReviews));
-                        }
                         if (typeof addNotification === 'function') addNotification('Review Posted', `You rated ${newReview.restaurant} ${newReview.rating} stars!`);
                     }
                     
+                    if (isVideo) {
+                        let videoReviews = JSON.parse(localStorage.getItem('waymo_video_reviews') || '[]');
+                        videoReviews.push({
+                            url: videoUrl,
+                            poster: 'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?q=80&w=800&auto=format&fit=crop',
+                            user: '@You',
+                            rating: Number(rating),
+                            likes: likes,
+                            restaurant: reviewRestaurantSelect.value
+                        });
+                        localStorage.setItem('waymo_video_reviews', JSON.stringify(videoReviews));
+                    }
+
                     localStorage.setItem('waymo_user_reviews', JSON.stringify(reviews));
+
+                    // Refresh Feed if on Reviews Page
+                    const allFeed = document.getElementById('all-feed');
+                    if (allFeed && window.renderVideos && window.getFeedItems) {
+                        window.renderVideos(window.getFeedItems(), allFeed);
+                        if (window.attachVideoCardListeners) window.attachVideoCardListeners();
+                    }
 
                     // Update Stat
                     if (statsValues.length > 1) {
@@ -2507,6 +3028,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
 
 // --- Global Theme Init ---
 document.addEventListener('DOMContentLoaded', () => {
@@ -2637,7 +3159,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const dots = tourModal.querySelectorAll('.tour-dot');
     const nextBtn = document.getElementById('tour-next-btn');
     const skipBtn = document.getElementById('tour-skip-btn');
-    const dontShowCheckbox = document.getElementById('tour-dont-show');
     let currentStep = 0;
 
     function updateTour(index) {
@@ -2662,9 +3183,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateTour(currentStep);
             } else {
                 // Finish
-                if (dontShowCheckbox && dontShowCheckbox.checked) {
-                    localStorage.setItem(userKey, 'true');
-                }
+                localStorage.setItem(userKey, 'true');
                 tourModal.style.display = 'none';
                 if (typeof addNotification === 'function') {
                     addNotification('You\'re Ready!', 'Start exploring the best food in town.');
@@ -2675,9 +3194,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (skipBtn) {
         skipBtn.addEventListener('click', () => {
-            if (dontShowCheckbox && dontShowCheckbox.checked) {
-                localStorage.setItem(userKey, 'true');
-            }
+            localStorage.setItem(userKey, 'true');
             tourModal.style.display = 'none';
         });
     }

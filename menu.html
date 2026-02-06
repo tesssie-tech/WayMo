@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Menu - WayMo</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍔</text></svg>">
     <link rel="stylesheet" href="Waymo.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -29,7 +30,7 @@
 
         <section class="video-feed-section">
             <h2><i class="fas fa-fire" style="color: var(--c2);"></i> Trending Reviews</h2>
-            <div class="video-feed-container">
+            <div class="video-feed-container" id="trending-feed">
                 <!-- Video cards injected by JS -->
             </div>
             <div class="fade-overlay"></div>
@@ -59,7 +60,7 @@
                 <i class="fas fa-home icon"></i>
                 <span class="label">Home</span>
             </button>
-            <button class="nav-item" data-view="menu" aria-label="Menu" onclick="location.href='menu.html'">
+            <button class="nav-item" data-view="menu" aria-label="Menu">
                 <i class="fas fa-utensils icon"></i>
                 <span class="label">Menu</span>
             </button>
@@ -68,11 +69,11 @@
                 <span class="cart-badge" style="display: none;">0</span>
                 <span class="label">Cart</span>
             </button>
-            <button class="nav-item" data-view="profile" aria-label="Profile" onclick="location.href='profile.html'">
+            <button class="nav-item" data-view="profile" aria-label="Profile">
                 <i class="fas fa-user icon"></i>
                 <span class="label">Profile</span>
             </button>
-            <button class="nav-item" data-view="contact" aria-label="Contact" onclick="location.href='contact.html'">
+            <button class="nav-item" data-view="contact" aria-label="Contact">
                 <i class="fas fa-headset icon"></i>
                 <span class="label">Contact</span>
             </button>
