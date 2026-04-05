@@ -480,10 +480,7 @@
                 const displayName = user.name.charAt(0).toUpperCase() + user.name.slice(1);
                 overlay.innerHTML = `<div class="welcome-mascot"><i class="fas fa-burger"></i></div><div class="welcome-text">Welcome Back, ${displayName}!</div>`;
                 document.body.appendChild(overlay);
-
-                setTimeout(() => {
-                    window.location.href = 'home.html';
-                }, 2000);
+                window.location.replace('home.html');
             });
 
             // Clear error on input
