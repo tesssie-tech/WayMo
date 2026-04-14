@@ -425,6 +425,28 @@
         header h1 {
             font-size: 1.8em;
         }
+        header {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 12px;
+            padding: 20px 15px !important;
+        }
+        .logo {
+            align-self: center;
+        }
+        .header-buttons {
+            width: 100%;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .btn-login,
+        .btn-signup {
+            display: block;
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+        }
         .search-box {
             flex-direction: column;
         }
